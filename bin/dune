@@ -1,0 +1,4 @@
+(executable
+ (public_name rpmfile)
+ (name main)
+ (libraries rpmfile))
