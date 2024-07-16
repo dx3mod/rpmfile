@@ -1,6 +1,6 @@
 (** A RPM(v3) package metadata parser powered by Angstrom. *)
 
-open Types
+include Types
 
 (* Parser *)
 module P (Selector : Selector.S) = struct
@@ -38,6 +38,7 @@ end
 module Selector = Selector
 module Tag = Tag
 module Accessor = Accessor
+module Types = Types
 
 let name = Accessor.(get_by_header_tag string Tag.Header.name)
 let build_time = Accessor.(get_by_header_tag any_int Tag.Header.build_time)

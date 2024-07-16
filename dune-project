@@ -2,6 +2,8 @@
 
 (name rpmfile)
 
+(version 0.1.0)
+
 (generate_opam_files true)
 
 (source
@@ -15,8 +17,9 @@
 
 (package
  (name rpmfile)
- (synopsis "A RPM package metadata parser")
- (description "A RPM(v3) package metadata parser powered by Angstrom")
+ (synopsis "RPM package metadata reader")
+ (description
+  "A library for reading metadata from RPM packages . Built as an Angstrom parser to support any use case")
  (depends
   ocaml
   dune
