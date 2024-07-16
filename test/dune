@@ -1,3 +1,4 @@
 (test
  (name test_rpmfile)
- (libraries alcotest))
+ (libraries rpmfile alcotest)
+ (deps hello-2.12.1-1.7.x86_64.rpm))
