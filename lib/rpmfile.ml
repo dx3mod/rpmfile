@@ -1,5 +1,3 @@
-(** A RPM(v3) package metadata parser powered by Angstrom. *)
-
 include Types
 
 module P (Selector : Selector.S) = struct
@@ -35,25 +33,54 @@ module Reader (Selector : Selector.S) = struct
 end
 
 module Selector = Selector
-module Tag = Tag
-module Accessor = Accessor
 module Types = Types
+module Tag = Tag
+module D = Decode
+module Header = Header
+module Lead = Lead
 
-let name = Accessor.(get_by_header_tag string Tag.Header.name)
-let build_time = Accessor.(get_by_header_tag any_int Tag.Header.build_time)
-let build_host = Accessor.(get_by_header_tag string Tag.Header.build_host)
-let size = Accessor.(get_by_header_tag any_int Tag.Header.size)
+exception Not_found of string
+exception Decode_error = D.Error
 
-let description =
-  Accessor.(get_by_header_tag (List.hd << string_array) Tag.Header.description)
+let get_value tag header = List.assoc tag header
 
-let summary =
-  Accessor.(get_by_header_tag (List.hd << string_array) Tag.Header.summary)
+let get' ~msg decoder tag header =
+  try get_value tag header |> decoder
+  with Stdlib.Not_found ->
+    raise
+    @@ Not_found (match msg with Some s -> s | None -> string_of_int tag)
 
-let license = Accessor.(get_by_header_tag string Tag.Header.license)
-let os = Accessor.(get_by_header_tag string Tag.Header.os)
-let arch = Accessor.(get_by_header_tag string Tag.Header.arch)
-let vendor = Accessor.(get_by_header_tag string Tag.Header.vendor)
-let packager = Accessor.(get_by_header_tag string Tag.Header.packager)
-let group = Accessor.(get_by_header_tag string_array Tag.Header.group)
-let url = Accessor.(get_by_header_tag string Tag.Header.url)
+let get ?msg (decoder : 'a D.decoder) tag metadata =
+  get' ~msg decoder tag metadata.header
+
+let get_from_signature ?msg (decoder : 'a D.decoder) tag metadata =
+  get' ~msg decoder tag metadata.signature
+
+let name = get ~msg:"name" D.string Tag.Header.name
+
+let rec summary' = get ~msg:"summery" D.string_array Tag.Header.summary
+and summary m = summary' m |> List.hd
+
+let rec description' =
+  get ~msg:"description" D.string_array Tag.Header.description
+
+and description m = description' m |> List.hd
+
+let build_time = get ~msg:"build_time" D.int32 Tag.Header.build_time
+and build_host = get ~msg:"build_host" D.string Tag.Header.build_host
+
+let size = get ~msg:"size" D.int32 Tag.Header.size
+let os = get ~msg:"os" D.string Tag.Header.os
+let license = get ~msg:"license" D.string Tag.Header.license
+let vendor = get ~msg:"vendor" D.string Tag.Header.vendor
+let version = get ~msg:"version" D.string Tag.Header.version
+let packager = get ~msg:"packager" D.string Tag.Header.packager
+let group = get ~msg:"group" D.string_array Tag.Header.group
+let url = get ~msg:"url" D.string Tag.Header.url
+let arch = get ~msg:"arch" D.string Tag.Header.arch
+let archive_size = get ~msg:"archive_size" D.int32 Tag.Header.archive_size
+let md5 = get_from_signature ~msg:"md5" D.(opt binary) Tag.Signature.md5
+let sha1 = get_from_signature ~msg:"sha1" D.binary Tag.Signature.sha1
+
+let payload_size =
+  get_from_signature ~msg:"payload_size" D.int32 Tag.Signature.payload_size

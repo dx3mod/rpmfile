@@ -15,14 +15,14 @@ Rpmfile.summary metadata
 (* - : string = "A Friendly Greeting Program" *)
 ```
 
-You can also have “direct” access to values by tag using the `Accessor` module.
-
+You can also have “direct” access to values by tag using the `get` function. 
+Example of getting file sizes:
 ```ocaml
-(* get files sizes *)
- Rpmfile.Accessor.(get_by_header_tag (array any_int) 1028) metadata
+Rpmfile.get Rpmfile.D.(array int) 1028 metadata
+(* int list = [35000; 0; 93787; ...]*)
 ```
 
-If there's a retrieval error, the `Accessor.Error` exception will be thrown.
+If there's a retrieval error, the `Rpmfile.Not_found` exception will be thrown.
 
 #### Custom selector 
 
@@ -38,14 +38,12 @@ end
 module _ = Rpmfile.Reader (SelectNameOnly)
 ```
 
-
 ## Documentation
 
 Lookup documentation using the [`odig`](https://github.com/b0-system/odig):
 ```bash
 odig rpmfile
 ```
-
 
 ## References
 

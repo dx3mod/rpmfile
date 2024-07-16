@@ -1,3 +1,5 @@
+type t = int
+
 module Header = struct
   let name = 1000
   let version = 1001

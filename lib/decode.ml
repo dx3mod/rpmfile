@@ -1,22 +1,20 @@
-open Types
+type 'a decoder = Header.index_value -> 'a
 
 exception Error of string
 
 let fail message = raise (Error message)
-let sprintf = Printf.sprintf
-
-let get_by_signature_tag f tag m =
-  try List.assoc tag m.signature |> f
-  with Not_found -> fail (sprintf "not found signature tag: %d" tag)
-
-let get_by_header_tag f tag m =
-  try List.assoc tag m.header |> f
-  with Not_found -> fail (sprintf "not found header tag: %d" tag)
-
 let string = function Header.String s -> s | _ -> fail "expected string"
 let binary = function Header.Binary s -> s | _ -> fail "expected binary"
 let any = Fun.id
 let char = function Header.Char x -> x | _ -> fail "expected char"
+
+let int = function
+  | Header.Int x -> x
+  | Header.Int32 x -> Int32.to_int x
+  | _ -> fail "expected int"
+
+let int32 = function Header.Int32 x -> x | _ -> fail "expected int32"
+let int64 = function Header.Int64 x -> x | _ -> fail "expected int64"
 
 let any_int = function
   | Header.Int x -> x
@@ -34,3 +32,4 @@ let array f = function
 
 let array' = array Fun.id
 let ( << ) fa fb v = fa (fb v)
+let opt f v = try Some (f v) with Error _ -> None
