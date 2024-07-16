@@ -60,17 +60,29 @@ let index_value_parser ~section_offset index_record =
   in
 
   match index_record.kind with
-  | 8 | 9 -> value_parser
+  | 7 | 8 | 9 -> value_parser
   | _ when index_record.count > 1 ->
       count index_record.count value_parser >>| fun x -> Array x
   | _ -> value_parser
 
-let parser =
+let parser ~selector =
   let open Angstrom in
   let* header_record = header_record_parser in
 
   let* index_records =
-    count header_record.number_of_index index_record_parser
+    let count n =
+      let rec loop = function
+        | 0 -> return []
+        | n ->
+            let* index_record = index_record_parser in
+            if selector index_record.tag then
+              lift (List.cons index_record) (loop (n - 1))
+            else loop (n - 1)
+      in
+      loop n
+    in
+
+    count header_record.number_of_index
     >>| List.sort (fun ka kb -> compare ka.offset kb.offset)
   in
 
