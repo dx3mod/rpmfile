@@ -2,7 +2,6 @@
 
 include Types
 
-(* Parser *)
 module P (Selector : Selector.S) = struct
   let metadata_parser =
     let open Angstrom in
