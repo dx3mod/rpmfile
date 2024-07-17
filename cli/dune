@@ -1,0 +1,4 @@
+(executable
+ (name cli)
+ (public_name rpmfile)
+ (libraries rpmfile unix))

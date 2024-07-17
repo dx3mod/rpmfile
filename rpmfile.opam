@@ -4,6 +4,7 @@ version: "0.1.0"
 synopsis: "RPM package metadata reader"
 description:
   "A library for reading metadata from RPM packages . Built as an Angstrom parser to support any use case"
+maintainer: ["Mikhail Lopatin <dx3mod@bk.ru>"]
 authors: ["Mikhail Lopatin <dx3mod@bk.ru>"]
 license: "MIT"
 tags: ["rpm" "parser"]

@@ -38,6 +38,14 @@ end
 module _ = Rpmfile.Reader (SelectNameOnly)
 ```
 
+#### CLI utility
+
+You can also use rpmfile as a CLI utility to get information about a package, similar to `rpm -qi`.
+
+```bash
+rpmfile hello-2.12.1-1.7.x86_64.rpm
+```
+
 ## Documentation
 
 Lookup documentation using the [`odig`](https://github.com/b0-system/odig):

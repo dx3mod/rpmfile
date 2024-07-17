@@ -12,7 +12,7 @@ let () =
   let open Alcotest in
   run "Rpmfile"
     [
-      ( "package",
+      ( "hello-2.12.1-1.7.x86_64.rpm",
         [
           test_case "name" `Quick test_name;
           test_case "version" `Quick test_version;
