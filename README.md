@@ -1,6 +1,6 @@
 # rpmfile
 
-A library for reading metadata from RPM packages, providing an [Angstrom] parser and a simple interface for accessing values.
+A library for reading metadata from [RPM] packages, providing an [Angstrom] parser and a simple interface for accessing values.
 
 ## Usage
 
@@ -53,6 +53,8 @@ Lookup documentation using the [`odig`](https://github.com/b0-system/odig):
 odig doc rpmfile
 ```
 
+Tutorial in Russian on [ocamlportal.ru](https://ocamlportal.ru/libraries/parsers/rpmfile).
+
 ## References
 
 - [Package File Format](https://refspecs.linuxbase.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html)
@@ -62,3 +64,4 @@ odig doc rpmfile
 
 
 [Angstrom]: https://github.com/inhabitedtype/angstrom
+[RPM]: https://en.wikipedia.org/wiki/RPM_Package_Manager
