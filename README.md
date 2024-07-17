@@ -42,7 +42,7 @@ module _ = Rpmfile.Reader (SelectNameOnly)
 
 Lookup documentation using the [`odig`](https://github.com/b0-system/odig):
 ```bash
-odig rpmfile
+odig doc rpmfile
 ```
 
 ## References
