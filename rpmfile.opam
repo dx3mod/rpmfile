@@ -11,9 +11,9 @@ tags: ["rpm" "parser"]
 homepage: "https://github.com/dx3mod/rpmfile"
 bug-reports: "https://github.com/dx3mod/rpmfile/issues"
 depends: [
-  "ocaml"
+  "ocaml" {> "4.14"}
   "dune" {>= "3.16"}
-  "angstrom"
+  "angstrom" {>= "0.15"}
   "alcotest" {with-test}
   "odoc" {with-doc}
 ]

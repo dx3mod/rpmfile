@@ -21,9 +21,11 @@
  (description
   "A library for reading metadata from RPM packages, providing an Angstrom parser and a simple interface for accessing values")
  (depends
-  ocaml
+  (ocaml
+   (> 4.14))
   dune
-  angstrom
+  (angstrom
+   (>= 0.15))
   (alcotest :with-test))
  (tags
   (rpm parser)))
