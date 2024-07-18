@@ -14,7 +14,9 @@ let parser =
   let* _ =
     string "\xED\xAB\xEE\xDB" <|> fail "invalid lead section magic number"
   in
-  let* version = both (int8 3) (int8 0) <|> fail "invalid package version" in
+  let* version =
+    both (int8 3 <|> int8 4) (int8 0) <|> fail "invalid package version"
+  in
   let* kind =
     int8 0 *> int8 0
     <|> int8 1 >>| project_type_of_int
