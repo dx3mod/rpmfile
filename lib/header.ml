@@ -41,7 +41,7 @@ let index_value_parser ~section_offset index_record =
     advance (index_record.offset - relative_offset)
   in
 
-  let null_term_string_parser = take_till (fun c -> c = '\x00') in
+  let null_term_string_parser = take_till (fun c -> c = '\x00') <* advance 1 in
 
   let value_parser =
     match index_record.kind with
