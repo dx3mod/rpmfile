@@ -1,6 +1,6 @@
 let show_pkg_info path =
   let open Printf in
-  let module Rpm_reader = Rpmfile.Reader (Rpmfile.Selector.All) in
+  let module Rpm_reader = Rpmfile.Reader (Rpmfile.Selector.Base) in
   let metadata = Rpm_reader.of_file_exn path in
 
   let get_build_date () =
