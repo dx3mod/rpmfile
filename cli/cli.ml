@@ -32,9 +32,9 @@ let show_pkg_info path =
   ()
 
 let () =
-  let package_filename = ref "" in
+  let package_filenames = ref [] in
   Arg.parse []
-    (fun filename -> package_filename := filename)
-    "Similar to 'rpm -qi' command.";
+    (fun filename -> package_filenames := filename :: !package_filenames)
+    "Similar to 'rpm -qi' command.\nUsage: rpmfile [FILENAMES]";
 
-  if !package_filename <> "" then show_pkg_info !package_filename
+  List.iter show_pkg_info !package_filenames
