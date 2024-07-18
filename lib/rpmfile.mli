@@ -81,11 +81,22 @@ val os : metadata -> string
 val license : metadata -> string
 val vendor : metadata -> string
 val version : metadata -> string
+val release : metadata -> string
 val packager : metadata -> string
+val distribution : metadata -> string
 val group : metadata -> string list
 val url : metadata -> string
+val dist_url : metadata -> string
 val arch : metadata -> string
-val archive_size : metadata -> int32
+val archive_size : metadata -> int32 option
 val md5 : metadata -> Bigstringaf.t option
 val sha1 : metadata -> Bigstringaf.t
 val payload_size : metadata -> int32
+val payload_format : metadata -> string
+val payload_compressor : metadata -> string
+val payload_flags : metadata -> string
+val source_rpm : metadata -> string
+val filenames : metadata -> string list
+val platform : metadata -> string
+val provide_names : metadata -> string list
+val require_names : metadata -> string list

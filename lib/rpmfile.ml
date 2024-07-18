@@ -83,13 +83,33 @@ let os = get ~msg:"os" D.string Tag.Header.os
 let license = get ~msg:"license" D.string Tag.Header.license
 let vendor = get ~msg:"vendor" D.string Tag.Header.vendor
 let version = get ~msg:"version" D.string Tag.Header.version
+let release = get ~msg:"release" D.string Tag.Header.release
 let packager = get ~msg:"packager" D.string Tag.Header.packager
+let distribution = get ~msg:"distribution" D.string Tag.Header.distribution
 let group = get ~msg:"group" D.string_array Tag.Header.group
 let url = get ~msg:"url" D.string Tag.Header.url
+let dist_url = get ~msg:"dist_url" D.string Tag.Header.dist_url
 let arch = get ~msg:"arch" D.string Tag.Header.arch
-let archive_size = get ~msg:"archive_size" D.int32 Tag.Header.archive_size
+let archive_size = get_opt D.int32 Tag.Header.archive_size
 let md5 = get_opt_from_signature D.binary Tag.Signature.md5
 let sha1 = get_from_signature ~msg:"sha1" D.binary Tag.Signature.sha1
 
 let payload_size =
   get_from_signature ~msg:"payload_size" D.int32 Tag.Signature.payload_size
+
+let payload_format =
+  get ~msg:"payload_format" D.string Tag.Header.payload_format
+
+let payload_compressor =
+  get ~msg:"payload_compressor" D.string Tag.Header.payload_compressor
+
+let payload_flags = get ~msg:"payload_flags" D.string Tag.Header.payload_flags
+let source_rpm = get ~msg:"source_rpm" D.string Tag.Header.source_rpm
+let filenames = get ~msg:"base_names" D.string_array Tag.Header.base_names
+let platform = get ~msg:"platform" D.string Tag.Header.platform
+
+let provide_names =
+  get ~msg:"provide_name" D.string_array Tag.Header.provide_name
+
+let require_names =
+  get ~msg:"require_name" D.string_array Tag.Header.require_name
