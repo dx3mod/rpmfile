@@ -32,4 +32,3 @@ let array f = function
 
 let array' = array Fun.id
 let ( << ) fa fb v = fa (fb v)
-let opt f v = try Some (f v) with Error _ -> None

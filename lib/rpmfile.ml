@@ -50,11 +50,20 @@ let get' ~msg decoder tag header =
     raise
     @@ Not_found (match msg with Some s -> s | None -> string_of_int tag)
 
+let get_opt' decoder tag header =
+  try Some (get_value tag header |> decoder) with Stdlib.Not_found -> None
+
 let get ?msg (decoder : 'a D.decoder) tag metadata =
   get' ~msg decoder tag metadata.header
 
+let get_opt (decoder : 'a D.decoder) tag metadata =
+  get_opt' decoder tag metadata.header
+
 let get_from_signature ?msg (decoder : 'a D.decoder) tag metadata =
   get' ~msg decoder tag metadata.signature
+
+let get_opt_from_signature (decoder : 'a D.decoder) tag metadata =
+  get_opt' decoder tag metadata.signature
 
 let name = get ~msg:"name" D.string Tag.Header.name
 
@@ -79,7 +88,7 @@ let group = get ~msg:"group" D.string_array Tag.Header.group
 let url = get ~msg:"url" D.string Tag.Header.url
 let arch = get ~msg:"arch" D.string Tag.Header.arch
 let archive_size = get ~msg:"archive_size" D.int32 Tag.Header.archive_size
-let md5 = get_from_signature ~msg:"md5" D.(opt binary) Tag.Signature.md5
+let md5 = get_opt_from_signature D.binary Tag.Signature.md5
 let sha1 = get_from_signature ~msg:"sha1" D.binary Tag.Signature.sha1
 
 let payload_size =
