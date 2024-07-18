@@ -75,10 +75,10 @@ let rec description' =
 
 and description m = description' m |> List.hd
 
-let build_time = get ~msg:"build_time" D.int32 Tag.Header.build_time
+let build_time = get ~msg:"build_time" D.native_int Tag.Header.build_time
 and build_host = get ~msg:"build_host" D.string Tag.Header.build_host
 
-let size = get ~msg:"size" D.int32 Tag.Header.size
+let size = get ~msg:"size" D.native_int Tag.Header.size
 let os = get ~msg:"os" D.string Tag.Header.os
 let license = get ~msg:"license" D.string Tag.Header.license
 let vendor = get ~msg:"vendor" D.string Tag.Header.vendor
@@ -90,12 +90,12 @@ let group = get ~msg:"group" D.string_array Tag.Header.group
 let url = get ~msg:"url" D.string Tag.Header.url
 let dist_url = get ~msg:"dist_url" D.string Tag.Header.dist_url
 let arch = get ~msg:"arch" D.string Tag.Header.arch
-let archive_size = get_opt D.int32 Tag.Header.archive_size
+let archive_size = get_opt D.native_int Tag.Header.archive_size
 let md5 = get_opt_from_signature D.binary Tag.Signature.md5
 let sha1 = get_from_signature ~msg:"sha1" D.binary Tag.Signature.sha1
 
 let payload_size =
-  get_from_signature ~msg:"payload_size" D.int32 Tag.Signature.payload_size
+  get_from_signature ~msg:"payload_size" D.native_int Tag.Signature.payload_size
 
 let payload_format =
   get ~msg:"payload_format" D.string Tag.Header.payload_format

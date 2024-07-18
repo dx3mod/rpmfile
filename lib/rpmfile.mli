@@ -69,12 +69,12 @@ val summary : metadata -> string
 val description' : metadata -> string list
 val description : metadata -> string
 
-val build_time : metadata -> int32
+val build_time : metadata -> int
 (** @return Unix-time. *)
 
 val build_host : metadata -> string
 
-val size : metadata -> int32
+val size : metadata -> int
 (** Sum of the sizes of the regular files in the archive. *)
 
 val os : metadata -> string
@@ -88,10 +88,10 @@ val group : metadata -> string list
 val url : metadata -> string
 val dist_url : metadata -> string
 val arch : metadata -> string
-val archive_size : metadata -> int32 option
+val archive_size : metadata -> int option
 val md5 : metadata -> Bigstringaf.t option
 val sha1 : metadata -> Bigstringaf.t
-val payload_size : metadata -> int32
+val payload_size : metadata -> int
 val payload_format : metadata -> string
 val payload_compressor : metadata -> string
 val payload_flags : metadata -> string
