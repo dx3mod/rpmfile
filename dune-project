@@ -26,6 +26,8 @@
   dune
   (angstrom
    (>= 0.15))
+  (angstrom-unix
+   (>= 0.15))
   (alcotest :with-test))
  (tags
   (rpm parser)))

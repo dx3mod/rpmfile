@@ -19,17 +19,19 @@ module Reader (Selector : Selector.S) = struct
     let module P = P (Selector) in
     Angstrom.(parse_string ~consume:Consume.Prefix) P.metadata_parser
 
-  let of_string_exn s =
-    match of_string s with
+  let unwrap = function
     | Ok metadata -> metadata
     | Error msg -> raise (Error msg)
 
-  let of_file' path of_string =
-    In_channel.with_open_bin path (fun ic ->
-        In_channel.input_all ic |> of_string)
+  let of_string_exn s = of_string s |> unwrap
 
-  let of_file path = of_file' path of_string
-  let of_file_exn path = of_file' path of_string_exn
+  let of_file' path =
+    let module P = P (Selector) in
+    In_channel.with_open_bin path (fun ic ->
+        Angstrom_unix.parse P.metadata_parser ic |> snd)
+
+  let of_file path = of_file' path
+  let of_file_exn path = of_file' path |> unwrap
 end
 
 module Selector = Selector
