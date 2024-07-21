@@ -16,21 +16,14 @@ let any_int = Angstrom.(BE.any_int32 >>| Int32.to_int)
 
 let header_record_parser =
   let open Angstrom in
-  let* _ = string "\x8E\xaD\xE8\x01" in
+  let* _ =
+    string "\x8E\xaD\xE8\x01" <|> fail "invalid header section magic number"
+  in
   let* _ = advance 4 in
   let* number_of_index = any_int in
   let* section_size = any_int in
 
   return { number_of_index; section_size }
-
-let index_record_parser =
-  let open Angstrom in
-  let* tag = any_int in
-  let* kind = any_int in
-  let* offset = any_int in
-  let* count = any_int in
-
-  return { tag; kind; offset; count }
 
 let index_value_parser ~section_offset index_record =
   let open Angstrom in
@@ -74,11 +67,16 @@ let parser ~selector =
       let rec loop = function
         | 0 -> return []
         | n ->
-            let* index_record = index_record_parser in
-            if selector index_record.tag then
-              lift (List.cons index_record) (loop (n - 1))
-            else loop (n - 1)
+            let* tag = any_int in
+            if selector tag then
+              let* kind = any_int in
+              let* offset = any_int in
+              let* count = any_int in
+
+              lift (List.cons { tag; kind; offset; count }) (loop @@ pred n)
+            else advance 12 *> loop (pred n)
       in
+
       loop n
     in
 
@@ -86,12 +84,15 @@ let parser ~selector =
     >>| List.sort (fun ka kb -> compare ka.offset kb.offset)
   in
 
-  let* index_values =
+  let* entries =
     let* section_offset = pos in
-    list @@ List.map (index_value_parser ~section_offset) index_records
+    list
+    @@ List.map
+         (fun k -> index_value_parser ~section_offset k >>| fun v -> (k.tag, v))
+         index_records
   in
 
   (* padding *)
   let* _ = advance ((8 - (header_record.section_size mod 8)) mod 8) in
 
-  return @@ List.map2 (fun k v -> (k.tag, v)) index_records index_values
+  return entries
