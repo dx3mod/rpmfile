@@ -1,6 +1,6 @@
 # rpmfile
 
-A library for reading metadata from [RPM] packages, providing an [Angstrom] parser and a simple interface for accessing values.
+A library for reading metadata from [RPM] packages (supports version 3.0 and partially 4.0), providing an [Angstrom] parser and a simple interface for accessing values.
 
 ## Usage
 
@@ -46,14 +46,14 @@ You can also use rpmfile as a CLI utility to get information about a package, si
 rpmfile hello-2.12.1-1.7.x86_64.rpm
 ```
 
+#### Achtung 
+
+For integer representation, native int is used by default, which is theoretically sufficient on 64-bit systems. Otherwise, use manual decoding of the value. 
+
 ## Documentation
 
-Lookup documentation using the [`odig`](https://github.com/b0-system/odig):
-```bash
-odig doc rpmfile
-```
-
-Tutorial in Russian on [ocamlportal.ru](https://ocamlportal.ru/libraries/parsers/rpmfile).
+- Lookup documentation using [`odig`](https://github.com/b0-system/odig)
+- Tutorial in Russian on [ocamlportal.ru](https://ocamlportal.ru/libraries/parsers/rpmfile)
 
 ## References
 
@@ -62,6 +62,10 @@ Tutorial in Russian on [ocamlportal.ru](https://ocamlportal.ru/libraries/parsers
   - Alternative my implementation in TypeScript &mdash; [rpm-parser](https://github.com/dx3mod/rpm-parser) 
   - [Live coding stream](https://youtu.be/tsI-ZypQ9O0?si=Oghi1yv-2BRkUb7r) (in Russian) demo version of the parser
 
+## Contribution
+
+The project is stable, but the library could be more complete. I look forward to your pull requests!
+If you encounter a bug, then please create an [issue](https://github.com/dx3mod/rpmfile/issues).
 
 [Angstrom]: https://github.com/inhabitedtype/angstrom
 [RPM]: https://en.wikipedia.org/wiki/RPM_Package_Manager
