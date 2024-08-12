@@ -1,33 +1,58 @@
-type record = { number_of_index : int; section_size : int }
-and index_record = { tag : int; kind : int; offset : int; count : int }
+open Angstrom
+open Rpmfile
 
-and index_value =
-  | Null
-  | Char of char
-  | Int of int
-  | Int32 of int32
-  | Int64 of int64
-  | String of string
-  | Binary of Bigstringaf.t
-  | StringArray of string list
-  | Array of index_value list
+let lead_parser =
+  let* _ =
+    string "\xED\xAB\xEE\xDB"
+    <|> ( take 4 >>= fun bytes ->
+          fail
+          @@ Printf.sprintf "invalid lead section magic number ('%s')" bytes )
+  in
+  let* version =
+    both (int8 3 <|> int8 4) (int8 0) <|> fail "invalid package version"
+  in
+  let* kind =
+    int8 0 *> int8 0
+    <|> int8 1
+    >>| (function
+          | 0 -> Lead.Binary
+          | 1 -> Lead.Source
+          | _ -> failwith "bad project_type conversion")
+    <|> fail "invalid project type"
+  in
+  let* arch_num = BE.any_int16 in
+  let* name =
+    let* name = take_till (fun c -> c = '\x00') in
+    let+ _ = advance (66 - String.length name) in
+    name
+  in
+  let* os_num = BE.any_int16 in
+  let* signature_type = BE.any_int16 in
+
+  let* _ = advance 16 in
+
+  return Lead.{ version; kind; arch_num; name; os_num; signature_type }
 
 let any_int = Angstrom.(BE.any_int32 >>| Int32.to_int)
 
-let header_record_parser =
+let header_index_parser =
   let open Angstrom in
   let* _ =
-    string "\x8E\xaD\xE8\x01" <|> fail "invalid header section magic number"
+    string "\x8E\xaD\xE8\x01"
+    <|> ( take 4 >>= fun bytes ->
+          fail
+          @@ Printf.sprintf "invalid header section magic number ('%s')" bytes
+        )
   in
   let* _ = advance 4 in
   let* number_of_index = any_int in
   let* section_size = any_int in
 
-  return { number_of_index; section_size }
+  return Header.{ number_of_index; section_size }
 
 let index_value_parser ~section_offset index_record =
-  let open Angstrom in
   let open Angstrom.BE in
+  let open Header.Entry in
   let* _ =
     let* absolute_offset = pos in
     let relative_offset = absolute_offset - section_offset in
@@ -45,7 +70,12 @@ let index_value_parser ~section_offset index_record =
     | 4 -> any_int32 >>| fun x -> Int32 x
     | 5 -> any_int64 >>| fun x -> Int64 x
     | 6 -> null_term_string_parser >>| fun x -> String x
-    | 7 -> take_bigstring index_record.count >>| fun x -> Binary x
+    | 7 ->
+        take_bigstring index_record.count >>| fun s ->
+        let length = Bigstringaf.length s in
+        let buf = Bytes.create length in
+        Bigstringaf.unsafe_blit_to_bytes s buf ~dst_off:0 ~src_off:0 ~len:length;
+        Binary buf
     | 8 | 9 ->
         count index_record.count null_term_string_parser >>| fun x ->
         StringArray x
@@ -58,9 +88,9 @@ let index_value_parser ~section_offset index_record =
       count index_record.count value_parser >>| fun x -> Array x
   | _ -> value_parser
 
-let parser ~selector =
-  let open Angstrom in
-  let* header_record = header_record_parser in
+let header_parser ~selector =
+  let open Header.Entry in
+  let* header_record = header_index_parser in
 
   let* index_records =
     let count n =

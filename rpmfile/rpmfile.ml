@@ -1,48 +1,13 @@
-include Types
+type lead = Lead.t
+type header = Header.t
+type metadata = { lead : lead; signature : header; header : header }
 
-module P (Selector : Selector.S) = struct
-  let metadata_parser =
-    let open Angstrom in
-    let* lead = Lead.parser in
-    let* signature = Header.parser ~selector:Selector.select_signature_tag in
-    let* header = Header.parser ~selector:Selector.select_header_tag in
-
-    return { lead; signature; header }
-end
-
-module Reader (Selector : Selector.S) = struct
-  type result = (metadata, string) Stdlib.result
-
-  exception Error of string
-
-  let of_string =
-    let module P = P (Selector) in
-    Angstrom.(parse_string ~consume:Consume.Prefix) P.metadata_parser
-
-  let unwrap = function
-    | Ok metadata -> metadata
-    | Error msg -> raise (Error msg)
-
-  let of_string_exn s = of_string s |> unwrap
-
-  let of_file' path =
-    let module P = P (Selector) in
-    In_channel.with_open_bin path (fun ic ->
-        Angstrom_unix.parse P.metadata_parser ic |> snd)
-
-  let of_file path = of_file' path
-  let of_file_exn path = of_file' path |> unwrap
-end
-
-module Selector = Selector
-module Types = Types
-module Tag = Tag
-module D = Decode
-module Header = Header
 module Lead = Lead
+module Header = Header
+module Selector = Selector
+module D = Decode
 
 exception Not_found of string
-exception Decode_error = D.Error
 
 let get_value tag header = List.assoc tag header
 

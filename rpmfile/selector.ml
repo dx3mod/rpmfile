@@ -1,14 +1,20 @@
+(** Predicate for parsing only necessary tags. *)
+
 module type S = sig
-  val select_header_tag : int -> bool
-  val select_signature_tag : int -> bool
+  val select_header_tag : Tag.t -> bool
+  val select_signature_tag : Tag.t -> bool
 end
 
+(** For reading all tags.  *)
 module All : S = struct
   let select_header_tag _ = true
   let select_signature_tag _ = true
 end
 
-module Base = struct
+(** For reading base tags. 
+    - base, version, release, arch, group, size, license,
+    source_rpm, build_time, build_host, packager, vendor, url, summary, description, distribution. *)
+module Base : S = struct
   include All
 
   let select_header_tag tag =

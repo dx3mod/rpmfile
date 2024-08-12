@@ -1,6 +1,6 @@
-module Rpm_reader = Rpmfile.Reader (Rpmfile.Selector.All)
+module Rpm_reader = Rpmfile_unix.Reader.Make (Rpmfile.Selector.All)
 
-let metadata = Rpm_reader.of_file_exn "hello-2.12.1-1.7.x86_64.rpm"
+let metadata = Rpm_reader.of_file "hello-2.12.1-1.7.x86_64.rpm" |> Unwrap.unwrap
 
 let test_name () =
   Alcotest.(check string) "name" "hello" (Rpmfile.name metadata)

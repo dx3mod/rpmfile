@@ -1,0 +1,4 @@
+(tests
+ (names test_select_all test_select_base)
+ (libraries rpmfile_unix alcotest)
+ (deps "hello-2.12.1-1.7.x86_64.rpm"))
