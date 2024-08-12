@@ -1,0 +1,5 @@
+(executable
+ (name rpmfile_cli)
+ (public_name rpmfile-cli)
+ (package rpmfile-cli)
+ (libraries rpmfile_eio eio_main))

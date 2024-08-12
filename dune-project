@@ -26,7 +26,7 @@
   (rpm parser rpmfile)))
 
 (package
- (name rpmfile_unix)
+ (name rpmfile-unix)
  (synopsis "RPM package metadata reader (powered by Angstrom)")
  (depends
   (ocaml
@@ -42,6 +42,11 @@
   (rpm parser rpmfile)))
 
 (package
- (name rpmfile_eio)
+ (name rpmfile-eio)
  (synopsis "RPM package metadata reader (powered by Eio)")
  (depends))
+
+(package
+ (name rpmfile-cli)
+ (synopsis "")
+ (depends ))
