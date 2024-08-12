@@ -1,0 +1,3 @@
+(library
+ (public_name rpmfile_eio)
+ (libraries rpmfile eio))

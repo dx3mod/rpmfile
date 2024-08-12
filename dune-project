@@ -40,3 +40,8 @@
   (alcotest :with-test))
  (tags
   (rpm parser rpmfile)))
+
+(package
+ (name rpmfile_eio)
+ (synopsis "RPM package metadata reader (powered by Eio)")
+ (depends))

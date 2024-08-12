@@ -1,13 +1,16 @@
-module Rpm_reader = Rpmfile_unix.Reader.Make (Rpmfile.Selector.All)
+module Rpm_reader = Rpmfile_eio.Reader.Make (Rpmfile.Selector.All)
 
 let metadata =
-  Rpm_reader.of_file "../../test_data/hello-2.12.1-1.7.x86_64.rpm"
-  |> Unwrap.unwrap
+  Eio_main.run (fun env ->
+      let path =
+        Eio.Path.(env#fs / "../../test_data/hello-2.12.1-1.7.x86_64.rpm")
+      in
+      Eio.Path.with_open_in path (Rpm_reader.of_flow ~max_size:10_000))
 
 let () =
   let open Alcotest in
   let open Testlib in
-  run "Rpmfile_unix (Selector.All)"
+  run "Rpmfile_eio (Selector.All)"
     [
       ( "hello-2.12.1-1.7.x86_64.rpm",
         [
