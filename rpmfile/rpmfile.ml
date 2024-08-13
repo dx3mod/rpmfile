@@ -7,6 +7,8 @@ module Header = Header
 module Selector = Selector
 module D = Decode
 
+(* low-level *)
+
 exception Not_found of string
 
 let get_value tag header = List.assoc tag header
@@ -31,6 +33,8 @@ let get_from_signature ?msg (decoder : 'a D.decoder) tag metadata =
 
 let get_opt_from_signature (decoder : 'a D.decoder) tag metadata =
   get_opt' decoder tag metadata.signature
+
+(* header *)
 
 let name = get ~msg:"name" D.string Tag.Header.name
 
@@ -58,11 +62,6 @@ let url = get ~msg:"url" D.string Tag.Header.url
 let dist_url = get ~msg:"dist_url" D.string Tag.Header.dist_url
 let arch = get ~msg:"arch" D.string Tag.Header.arch
 let archive_size = get_opt D.native_int Tag.Header.archive_size
-let md5 = get_opt_from_signature D.binary Tag.Signature.md5
-let sha1 = get_from_signature ~msg:"sha1" D.binary Tag.Signature.sha1
-
-let payload_size =
-  get_from_signature ~msg:"payload_size" D.native_int Tag.Signature.payload_size
 
 let payload_format =
   get ~msg:"payload_format" D.string Tag.Header.payload_format
@@ -80,3 +79,11 @@ let provide_names =
 
 let require_names =
   get ~msg:"require_name" D.string_array Tag.Header.require_name
+
+(* signature *)
+
+let md5 = get_from_signature D.binary Tag.Signature.md5
+let sha1 = get_from_signature ~msg:"sha1" D.string Tag.Signature.sha1
+
+let payload_size =
+  get_from_signature ~msg:"payload_size" D.native_int Tag.Signature.payload_size

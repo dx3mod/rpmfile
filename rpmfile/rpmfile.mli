@@ -29,6 +29,8 @@ exception Not_found of string
 
 (** If the field is not found, an [Not_found] exception is returned.  *)
 
+(** {3 Header fields}  *)
+
 val name : metadata -> string
 val summary' : metadata -> string list
 val summary : metadata -> string
@@ -49,9 +51,6 @@ val url : metadata -> string
 val dist_url : metadata -> string
 val arch : metadata -> string
 val archive_size : metadata -> int option
-val md5 : metadata -> bytes option
-val sha1 : metadata -> bytes
-val payload_size : metadata -> int
 val payload_format : metadata -> string
 val payload_compressor : metadata -> string
 val payload_flags : metadata -> string
@@ -61,10 +60,16 @@ val platform : metadata -> string
 val provide_names : metadata -> string list
 val require_names : metadata -> string list
 
+(** {3 Signature fields}  *)
+
+val md5 : metadata -> bytes
+val sha1 : metadata -> string
+val payload_size : metadata -> int
+
 (** {2 Low-level}  *)
 
-(** @raise [Not_found] if the tag is not found.
-    @raise [D.Error] if decoding of the value failed.  *)
+(** @raise Not_found if the tag is not found.
+    @raise D.Error if decoding of the value failed.  *)
 
 val get_value : 'a -> ('a * 'b) list -> 'b
 val get' : msg:string option -> ('a -> 'b) -> int -> (int * 'a) list -> 'b

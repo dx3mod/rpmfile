@@ -2,29 +2,69 @@
 
 A library for reading metadata from [RPM] packages (supports version 3.0 and partially 4.0).
 
-> [!WARNING]  
-> Active development on version 0.3 is ongoing.
-
 ## Installation
 
 You can install the library using OPAM package manager:
 
 ```console
-$ opam install rpmfile rpmfile_unix rpmfile_eio
+$ opam install rpmfile 
+$ opam install # rpmfile-unix / rpmfile-eio
 ```
 
 ## Usage
 
 The `Rpmfile` module only provides types and functions for easy field access. To read packages you need to use _readers_.
 
-- Original reader (since the first version) powered by [Angstrom].
-- And new [Eio]-based reader for more modern age.
+| Package        | Description                                                     |
+| -------------- | --------------------------------------------------------------- |
+| `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] |
+| `rpmfile-eio`  | And new [Eio]-based reader for more modern age                  |
 
-....
+### Theoretical minimum
+
+Each RPM package consists of four sections: lead, signature, header, and payload. The first three are meta information about the package. It contains a description, a dependency list, and so on.
+
+The information in the signature and header is stored on a key-value basis, where the key is called a tag. The value can be a number, a string or an array.
+
+Often you don't need all information about a package, but only some tags. For this task, a selector (predicate function) is used to determine which tags should be parsed and which should not. This greatly increases parsing speed and saves memory.
+
+### Read package
+
+For an example, let's use the `Rpmfile_unix`reader.
+
+```ocaml
+(* Create a reader to read all tags. *)
+module Rpm_pkg_reader = module Rpmfile_unix.Reader.Make (Rpmfile.Selector.All)
+
+let () =
+  let metadata =
+    Rpm_pkg_reader.of_file "hello-2.12.1-1.7.x86_64.rpm"
+    |> Result.get_ok
+  in
+
+  (* Get the package name by field access function. *)
+  Printf.printf "Package Name: %s\n" @@ Rpmfile.name metadata
+```
+
+### Custom selector
+
+You may write your own selector.
+
+```ocaml
+module My_custom_selector : Rpmfile.Selector.S = struct
+  (* ... *)
+end
+```
 
 ### Limitations
 
-For integer representation, native int is used by default, which is theoretically sufficient on 64-bit systems. Otherwise, use manual decoding of the value.
+The implementation uses native OCaml int (32/64 bit depending on your machine) for some internal service values (e.g. as an offset), which may have limitations.
+
+Also, decoding values with field access functions converts any int to native int, which may break on 32-bit systems.
+
+## Documentation
+
+See the [API references](https://ocaml.org/p/rpmfile/latest/doc/index.html).
 
 ## Contribution
 

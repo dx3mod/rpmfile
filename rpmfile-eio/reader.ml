@@ -3,6 +3,7 @@ exception Invalid_parsing of string
 module type S = sig
   val of_flow :
     ?initial_size:int -> max_size:int -> _ Eio.Flow.source -> Rpmfile.metadata
+  (** @raise  Invalid_parsing *)
 end
 
 module Make (S : Rpmfile.Selector.S) : S = struct
