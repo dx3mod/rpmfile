@@ -32,7 +32,8 @@
   (ocaml
    (> 4.14))
   dune
-  rpmfile
+  (rpmfile
+   (>= 0.3.0))
   (angstrom
    (>= 0.15))
   (angstrom-unix
@@ -48,7 +49,10 @@
   (ocaml
    (> 5.1))
   dune
-  rpmfile
+  (rpmfile
+   (>= 0.3.0))
+  (eio
+   (>= 1.1))
   (alcotest :with-test)
   (eio_main :with-test))
  (tags
@@ -61,6 +65,8 @@
   (ocaml
    (> 5.1))
   dune
+  (eio_main
+   (>= 1.1))
   rpmfile-eio)
  (tags
   (rpm parser rpmfile)))

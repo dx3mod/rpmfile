@@ -1,4 +1,5 @@
 (tests
  (names test_select_all test_select_base)
+ (package rpmfile-unix)
  (libraries rpmfile_unix alcotest test_cases)
  (deps "%{workspace_root}/test_misc/hello-2.12.1-1.7.x86_64.rpm"))

@@ -34,7 +34,7 @@ For an example, let's use the `Rpmfile_unix`reader.
 
 ```ocaml
 (* Create a reader to read all tags. *)
-module Rpm_pkg_reader = module Rpmfile_unix.Reader.Make (Rpmfile.Selector.All)
+module Rpm_pkg_reader = Rpmfile_unix.Reader.Make (Rpmfile.Selector.All)
 
 let () =
   let metadata =
