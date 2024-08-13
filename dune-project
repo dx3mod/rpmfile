@@ -44,9 +44,22 @@
 (package
  (name rpmfile-eio)
  (synopsis "RPM package metadata reader (powered by Eio)")
- (depends))
+ (depends
+  (ocaml
+   (> 5.1))
+  dune
+  rpmfile
+  (alcotest :with-test))
+ (tags
+  (rpm parser rpmfile)))
 
 (package
  (name rpmfile-cli)
- (synopsis "")
- (depends ))
+ (synopsis "CLI utility for reading RPM package information (like rpm -qi)")
+ (depends
+  (ocaml
+   (> 5.1))
+  dune
+  rpmfile-eio)
+ (tags
+  (rpm parser rpmfile)))

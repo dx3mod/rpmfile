@@ -7,7 +7,7 @@ A library for reading metadata from [RPM] packages (supports version 3.0 and par
 You can install the library using OPAM package manager:
 
 ```console
-$ opam install rpmfile 
+$ opam install rpmfile
 $ opam install # rpmfile-unix / rpmfile-eio
 ```
 
@@ -15,10 +15,10 @@ $ opam install # rpmfile-unix / rpmfile-eio
 
 The `Rpmfile` module only provides types and functions for easy field access. To read packages you need to use _readers_.
 
-| Package        | Description                                                     |
-| -------------- | --------------------------------------------------------------- |
-| `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] |
-| `rpmfile-eio`  | And new [Eio]-based reader for more modern age                  |
+| Package        | Description                                                     | Require OCaml |
+| -------------- | --------------------------------------------------------------- | ------------- |
+| `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] | > 4.14        |
+| `rpmfile-eio`  | New [Eio]-based reader for more modern age                      | > 5.1         |
 
 ### Theoretical minimum
 
