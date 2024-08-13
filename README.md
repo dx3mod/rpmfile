@@ -56,6 +56,17 @@ module My_custom_selector : Rpmfile.Selector.S = struct
 end
 ```
 
+### Manual decode
+
+You can write your own decoder if there is no convenient field access function for the tag you need.
+
+```ocaml
+let get_signature_size_field =
+  Rpmfile.get_from_signature
+    ~msg:"signature.size" (* Failwith message. *)
+    D.int Tag.Signature.size
+```
+
 ### Limitations
 
 The implementation uses native OCaml int (32/64 bit depending on your machine) for some internal service values (e.g. as an offset), which may have limitations.
