@@ -28,9 +28,10 @@ end
 let lead_parser =
   let+ _ = R.string "\xED\xAB\xEE\xDB"
   and+ version =
-    R.uint8 <*> R.uint8
+    R.BE.uint16
     |> R.map (function
-         | ((3 | 4), 0) as v -> v
+         | 0x0300 -> (3, 0)
+         | 0x0400 -> (4, 0)
          | _ -> failwith "invalid package version")
   and+ kind =
     R.BE.uint16
@@ -74,7 +75,7 @@ let header_entry_value_parser ~(section_offset : int)
     match record.kind with
     | 0 -> R.return Null
     | 1 -> R.any_char >>| fun x -> Char x
-    | 2 -> R.any_char >>| fun x -> Int (int_of_char x)
+    | 2 -> R.uint8 >>| fun x -> Int x
     | 3 -> R.BE.uint16 >>| fun x -> Int x
     | 4 -> R.BE.uint32 >>| fun x -> Int32 x
     | 5 -> R.BE.uint64 >>| fun x -> Int64 x

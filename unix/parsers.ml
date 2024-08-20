@@ -65,8 +65,8 @@ let index_value_parser ~section_offset index_record =
     match index_record.kind with
     | 0 -> return Null
     | 1 -> any_char >>| fun x -> Char x
-    | 2 -> any_int8 >>| fun x -> Int x
-    | 3 -> any_int16 >>| fun x -> Int x
+    | 2 -> any_uint8 >>| fun x -> Int x
+    | 3 -> any_uint16 >>| fun x -> Int x
     | 4 -> any_int32 >>| fun x -> Int32 x
     | 5 -> any_int64 >>| fun x -> Int64 x
     | 6 -> null_term_string_parser >>| fun x -> String x
