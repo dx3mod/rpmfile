@@ -1,5 +1,5 @@
 (** This module has a type definition and functions that make it easy to access fields.
-    If you want to read a package, you can use one of the backends ([rpmfile_unix] or [rpmfile_eio]).   *)
+    If you want to read a package, you can use one of the readers ([rpmfile_unix] or [rpmfile_eio]).   *)
 
 (*******************************************************************)
 (** {1 Types}  *)

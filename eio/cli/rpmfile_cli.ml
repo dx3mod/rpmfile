@@ -3,7 +3,13 @@ open Eio
 let show_pkg_info path =
   let open Printf in
   let module Rpm_reader = Rpmfile_eio.Reader.Make (Rpmfile.Selector.All) in
-  let metadata = Path.with_open_in path (Rpm_reader.of_flow ~max_size:5_000) in
+  let metadata =
+    match Path.with_open_in path (Rpm_reader.of_flow ~max_size:5_000) with
+    | Ok metadata -> metadata
+    | Error msg ->
+        prerr_endline msg;
+        exit 1
+  in
 
   let get_build_date () =
     let date = Unix.localtime (float_of_int (Rpmfile.build_time metadata)) in

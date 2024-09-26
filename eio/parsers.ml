@@ -5,7 +5,7 @@ module R = struct
   include Eio.Buf_read
 
   let count n p =
-    if n < 0 then failwith "count: n < 0"
+    if n < 0 then raise (Invalid_argument "count: n < 0")
     else
       let rec loop = function
         | 0 -> return []

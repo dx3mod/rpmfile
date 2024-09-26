@@ -1,9 +1,9 @@
-exception Invalid_parsing of string
-
 module type S = sig
   val of_flow :
-    ?initial_size:int -> max_size:int -> _ Eio.Flow.source -> Rpmfile.metadata
-  (** @raise  Invalid_parsing *)
+    ?initial_size:int ->
+    max_size:int ->
+    _ Eio.Flow.source ->
+    (Rpmfile.metadata, string) Stdlib.result
 end
 
 module Make (S : Rpmfile.Selector.S) : S = struct
@@ -14,7 +14,6 @@ module Make (S : Rpmfile.Selector.S) : S = struct
         ~select_header_tag:S.select_header_tag
     in
 
-    match Eio.Buf_read.format_errors parser buf with
-    | Ok metadata -> metadata
-    | Error (`Msg m) -> raise (Invalid_parsing m)
+    Eio.Buf_read.format_errors parser buf
+    |> Result.map_error (function `Msg m -> m)
 end

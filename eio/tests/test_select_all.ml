@@ -3,7 +3,8 @@ module Rpm_reader = Rpmfile_eio.Reader.Make (Rpmfile.Selector.All)
 let metadata =
   Eio_main.run (fun env ->
       let path = Eio.Path.(env#fs / Test_cases.package_path) in
-      Eio.Path.with_open_in path (Rpm_reader.of_flow ~max_size:10_000))
+      Eio.Path.with_open_in path (Rpm_reader.of_flow ~max_size:10_000)
+      |> Result.get_ok)
 
 let () =
   let open Alcotest in

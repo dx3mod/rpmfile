@@ -3,7 +3,10 @@
     {[
       let read_metadata path = 
           let module Rpm_reader = Rpmfile_eio.Reader.Make (Rpmfile.Selector.Base) in 
-          let metadata = Path.with_open_in path (Rpm_reader.of_flow ~max_size:5_000) in
+          let metadata = 
+            Path.with_open_in path (Rpm_reader.of_flow ~max_size:5_000) 
+            |> Result.get_ok
+          in
           (* ... *)
     ]}
 
