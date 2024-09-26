@@ -1,2 +1,2 @@
-module Parsers = Parsers
+module P = Parsers
 module Reader = Reader

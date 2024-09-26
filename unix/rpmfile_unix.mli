@@ -8,7 +8,7 @@
 
   *)
 
-module Parsers = Parsers
+module P = Parsers
 (** Angstrom's parsers. *)
 
 module Reader = Reader
