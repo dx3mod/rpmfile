@@ -20,7 +20,7 @@
  (synopsis "RPM package metadata reader")
  (depends
   (ocaml
-   (> 4.14))
+   (>= 4.14))
   dune)
  (tags
   (rpm parser rpmfile)))
@@ -30,7 +30,7 @@
  (synopsis "RPM package metadata reader (powered by Angstrom)")
  (depends
   (ocaml
-   (> 4.14))
+   (>= 4.14))
   dune
   (rpmfile
    (>= 0.3.0))

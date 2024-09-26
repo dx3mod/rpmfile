@@ -17,7 +17,7 @@ The `Rpmfile` module only provides types and functions for easy field access. To
 
 | Package        | Description                                                     | Require OCaml |
 | -------------- | --------------------------------------------------------------- | ------------- |
-| `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] | > 4.14        |
+| `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] | >= 4.14        |
 | `rpmfile-eio`  | New [Eio]-based reader for more modern age                      | > 5.1         |
 
 ### Theoretical minimum
