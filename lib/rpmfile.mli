@@ -78,3 +78,8 @@ val get : ?msg:string -> 'a D.decoder -> int -> metadata -> 'a
 val get_opt : 'a D.decoder -> int -> metadata -> 'a option
 val get_from_signature : ?msg:string -> 'a D.decoder -> int -> metadata -> 'a
 val get_opt_from_signature : 'a D.decoder -> int -> metadata -> 'a option
+
+(** {1 Utilities}  *)
+
+val is_package : string -> bool
+(** [is_package input] checks that [input] starts with the magic bytes of RPM package format. *)

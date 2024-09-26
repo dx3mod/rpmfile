@@ -87,3 +87,9 @@ let sha1 = get_from_signature ~msg:"sha1" D.string Tag.Signature.sha1
 
 let payload_size =
   get_from_signature ~msg:"payload_size" D.native_int Tag.Signature.payload_size
+
+(* Utilities *)
+
+let is_package input =
+  String.starts_with ~prefix:"\xED\xAB\xEE\xDB\x03\x00" input
+  || String.starts_with ~prefix:"\xED\xAB\xEE\xDB\x04\x00" input
