@@ -50,7 +50,7 @@
    (> 5.1))
   dune
   (rpmfile
-   (>= 0.3.0))
+   (>= 0.4.0))
   (eio
    (>= 1.1))
   (alcotest :with-test)
@@ -67,6 +67,7 @@
   dune
   (eio_main
    (>= 1.1))
-  rpmfile-eio)
+  (rpmfile-eio
+   (>= 0.4.0)))
  (tags
   (rpm parser rpmfile)))
