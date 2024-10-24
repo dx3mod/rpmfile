@@ -2,7 +2,7 @@
 
 (name rpmfile)
 
-(version 0.4.0)
+(version 0.5.0)
 
 (generate_opam_files true)
 
@@ -35,8 +35,6 @@
   (rpmfile
    (>= 0.3.0))
   (angstrom
-   (>= 0.15))
-  (angstrom-unix
    (>= 0.15))
   (alcotest :with-test))
  (tags

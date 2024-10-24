@@ -1,4 +1,4 @@
 (library
  (public_name rpmfile-unix)
  (name rpmfile_unix)
- (libraries rpmfile angstrom angstrom-unix))
+ (libraries rpmfile angstrom))

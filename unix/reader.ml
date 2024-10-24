@@ -24,7 +24,9 @@ module Make (Selector : Rpmfile.Selector.S) : S = struct
 
   let of_channel ic =
     let module P = P (Selector) in
-    Angstrom_unix.parse P.metadata_parser ic |> snd
+    In_channel.input_all ic
+    |> Angstrom.(
+         Angstrom.parse_string ~consume:Consume.Prefix P.metadata_parser)
 
   let of_file path = In_channel.with_open_bin path of_channel
 end
