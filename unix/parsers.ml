@@ -1,24 +1,30 @@
 open Angstrom
 open Rpmfile
 
+module Utils = struct
+  let fail_with_context p f = p >>= fun value -> fail @@ f value
+  let failf (format : _ format6) = Fun.compose fail (Printf.sprintf format)
+end
+
+open Utils
+
 let lead_parser =
   let* _ =
     string "\xED\xAB\xEE\xDB"
-    <|> ( take 4 >>= fun bytes ->
-          fail
-          @@ Printf.sprintf "invalid lead section magic number ('%s')" bytes )
+    <|> fail_with_context (take 4)
+          (Printf.sprintf "invalid lead section magic number ('%s')")
   in
   let* version =
-    both (int8 3 <|> int8 4) (int8 0) <|> fail "invalid package version"
+    BE.any_uint16 >>= function
+    | 0x0300 -> return (3, 0)
+    | 0x0400 -> return (4, 0)
+    | version -> failf "invalid package version (got %d)" version
   in
   let* kind =
-    int8 0 *> int8 0
-    <|> int8 1
-    >>| (function
-          | 0 -> Lead.Binary
-          | 1 -> Lead.Source
-          | _ -> failwith "bad project_type conversion")
-    <|> fail "invalid project type"
+    BE.any_uint16 >>= function
+    | 0 -> return Lead.Binary
+    | 1 -> return Lead.Source
+    | kind -> failf "invalid package kind (got %d)" kind
   in
   let* arch_num = BE.any_int16 in
   let* name =
@@ -39,10 +45,8 @@ let header_index_parser =
   let open Angstrom in
   let* _ =
     string "\x8E\xaD\xE8\x01"
-    <|> ( take 4 >>= fun bytes ->
-          fail
-          @@ Printf.sprintf "invalid header section magic number ('%s')" bytes
-        )
+    <|> fail_with_context (take 4)
+          (Printf.sprintf "invalid header section magic number (got '%s')")
   in
   let* _ = advance 4 in
   let* number_of_index = any_int in

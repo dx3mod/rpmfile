@@ -4,6 +4,7 @@ module type S = sig
   val of_file : string -> (Rpmfile.metadata, string) result
 end
 
+(** Metadata Angstrom's parser.  *)
 module P (S : Rpmfile.Selector.S) = struct
   open Rpmfile
   open Parsers
