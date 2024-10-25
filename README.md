@@ -89,6 +89,14 @@ let get_signature_size_field =
     D.int Tag.Signature.size
 ```
 
+### Lwt 
+
+For how to read from a Lwt channel, see [the example](./examples/with_lwt.ml).
+
+### Read by chunk
+
+See the `Angstrom.Unbuffered` module.
+
 ### Limitations
 
 The implementation uses native OCaml int (32/64 bit depending on your machine) for some internal service values (e.g. as an offset), which may have limitations.
@@ -129,10 +137,6 @@ Distribution: openSUSE Tumbleweed
 ```
 
 </details>
-
-### Lwt 
-
-For how to read from a Lwt channel, see [the example](./examples/with_lwt.ml).
 
 ## Documentation
 
