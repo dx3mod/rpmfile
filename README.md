@@ -130,6 +130,10 @@ Distribution: openSUSE Tumbleweed
 
 </details>
 
+### Lwt 
+
+For how to read from a Lwt channel, see [the example](./examples/with_lwt.ml).
+
 ## Documentation
 
 See the API references:
