@@ -55,17 +55,3 @@
   (eio_main :with-test))
  (tags
   (rpm parser rpmfile)))
-
-(package
- (name rpmfile-cli)
- (synopsis "CLI utility for reading RPM package information (like rpm -qi)")
- (depends
-  (ocaml
-   (> 5.1))
-  dune
-  (eio_main
-   (>= 1.1))
-  (rpmfile-eio
-   (>= 0.4.0)))
- (tags
-  (rpm parser rpmfile)))
