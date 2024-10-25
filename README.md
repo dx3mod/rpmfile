@@ -2,23 +2,11 @@
 
 A library for reading metadata from [RPM packages][RPM] (supports version 3.0 and partially 4.0) written in OCaml.
 
-<!-- ## Installation
-
-You can install the library using OPAM package manager:
-
-```console
-$ opam install rpmfile
-$ opam install # rpmfile-unix / rpmfile-eio
-```
-
-Extra:
-```console
-$ opam install rpmfile-cli # depends by rpmfile-eio
-``` -->
-
 ## Usage
 
-The `Rpmfile` module only provides types and functions for easy field access. To read packages you need to use _readers_.
+The `rpmfile` package only provides types and functions for easy field access.
+
+To read RPM files, you need to use a package that implements a *reader*.
 
 | Package        | Description                                                     | Require OCaml |
 |----------------|-----------------------------------------------------------------|---------------|
@@ -32,6 +20,17 @@ You can install the library using OPAM package manager:
 ```console
 $ opam install # rpmfile-unix / rpmfile-eio
 ```
+
+<details>
+<summary>Development version</summary>
+
+Also, you may want to use the development (upstream) version of the library, but be careful:
+
+```console
+$ opam pin rpmfile-*.dev https://github.com/dx3mod/rpmfile.git
+```
+
+</details>
 
 ### Theoretical minimum
 
@@ -104,7 +103,7 @@ You can use the `rpmfile-unix` package as a command line utility to get basic in
 <summary>Example</summary>
 
 ```console
-$ rpmfile test_misc/hello-2.12.1-1.7.x86_64.rpm
+$ rpmfile-unix test_misc/hello-2.12.1-1.7.x86_64.rpm
 Name        : hello                 
 Version     : 2.12.1
 Release     : 1.7
@@ -133,7 +132,10 @@ Distribution: openSUSE Tumbleweed
 
 ## Documentation
 
-See the [API references](https://ocaml.org/p/rpmfile/latest/doc/index.html).
+See the API references:
+- <https://ocaml.org/p/rpmfile/latest>
+- <https://ocaml.org/p/rpmfile-unix/latest>
+- <https://ocaml.org/p/rpmfile-eio/latest>
 
 ## Contribution
 
