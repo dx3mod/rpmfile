@@ -1,8 +1,8 @@
 # rpmfile
 
-A library for reading metadata from [RPM packages][RPM] (supports version 3.0 and partially 4.0).
+A library for reading metadata from [RPM packages][RPM] (supports version 3.0 and partially 4.0) written in OCaml.
 
-## Installation
+<!-- ## Installation
 
 You can install the library using OPAM package manager:
 
@@ -14,7 +14,7 @@ $ opam install # rpmfile-unix / rpmfile-eio
 Extra:
 ```console
 $ opam install rpmfile-cli # depends by rpmfile-eio
-```
+``` -->
 
 ## Usage
 
@@ -24,6 +24,14 @@ The `Rpmfile` module only provides types and functions for easy field access. To
 |----------------|-----------------------------------------------------------------|---------------|
 | `rpmfile-unix` | Original reader (since the first version) powered by [Angstrom] | >= 4.14       |
 | `rpmfile-eio`  | New [Eio]-based reader for more modern age                      | > 5.1         |
+
+### Installation
+
+You can install the library using OPAM package manager:
+
+```console
+$ opam install # rpmfile-unix / rpmfile-eio
+```
 
 ### Theoretical minimum
 
@@ -90,13 +98,13 @@ Also, decoding values with field access functions converts any int to native OCa
 
 ### CLI
 
-You can use the `rpmfile-cli` package as a command line utility to get basic information about the package, similar to `rpm -qi`.
+You can use the `rpmfile-unix` package as a command line utility to get basic information about the package, similar to `rpm -qi`.
 
 <details>
 <summary>Example</summary>
 
 ```console
-$ rpmfile-cli test_misc/hello-2.12.1-1.7.x86_64.rpm
+$ rpmfile test_misc/hello-2.12.1-1.7.x86_64.rpm
 Name        : hello                 
 Version     : 2.12.1
 Release     : 1.7
