@@ -3,7 +3,11 @@ open Rpmfile
 
 module Utils = struct
   let fail_with_context p f = p >>= fun value -> fail @@ f value
-  let failf (format : _ format6) = Fun.compose fail (Printf.sprintf format)
+
+  let failf (format : _ format6) =
+    (* Fun.compose only appears with 5.2  *)
+    let[@inline] ( $ ) f g x = f (g x) in
+    fail $ Printf.sprintf format
 end
 
 open Utils
