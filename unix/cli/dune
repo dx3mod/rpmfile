@@ -1,5 +1,0 @@
-(executable
- (name main)
- (public_name rpmfile-unix)
- (package rpmfile-unix)
- (libraries unix rpmfile-unix))

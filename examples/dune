@@ -1,3 +1,0 @@
-(executables
- (names cli_eio with_lwt)
- (libraries rpmfile-eio rpmfile-unix eio_main lwt angstrom-lwt-unix))

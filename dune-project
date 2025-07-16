@@ -2,7 +2,7 @@
 
 (name rpmfile)
 
-(version 0.5.0)
+(version 1.0.0)
 
 (generate_opam_files true)
 
@@ -17,41 +17,10 @@
 
 (package
  (name rpmfile)
- (synopsis "RPM package metadata reader")
+ (synopsis "RPM package reader")
  (depends
   (ocaml
    (>= 4.14))
+   angstrom
   dune)
- (tags
-  (rpm parser rpmfile)))
-
-(package
- (name rpmfile-unix)
- (synopsis "RPM package metadata reader (powered by Angstrom)")
- (depends
-  (ocaml
-   (>= 4.14))
-  dune
-  (rpmfile
-   (>= 0.3.0))
-  (angstrom
-   (>= 0.15))
-  (alcotest :with-test))
- (tags
-  (rpm parser rpmfile)))
-
-(package
- (name rpmfile-eio)
- (synopsis "RPM package metadata reader (powered by Eio)")
- (depends
-  (ocaml
-   (> 5.1))
-  dune
-  (rpmfile
-   (>= 0.4.0))
-  (eio
-   (>= 1.1))
-  (alcotest :with-test)
-  (eio_main :with-test))
- (tags
-  (rpm parser rpmfile)))
+ (tags (rpm)))

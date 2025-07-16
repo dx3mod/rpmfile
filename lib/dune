@@ -1,2 +1,3 @@
 (library
- (public_name rpmfile))
+ (public_name rpmfile)
+ (libraries angstrom))
