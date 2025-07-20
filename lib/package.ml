@@ -1,4 +1,9 @@
-type t = { lead : lead; signature : header; header : header }
+type t = {
+  lead : lead;
+  signature : header;
+  header : header;
+  body : Bigstringaf.t option;
+}
 
 and lead = {
   version : [ `V3 | `V4 ];
@@ -19,6 +24,6 @@ and header_entry_value =
   | Int32 of int32
   | Int64 of int64
   | String of string
-  | Binary of bytes
+  | Binary of Bigstringaf.t
   | StringArray of string list
   | Array of header_entry_value list

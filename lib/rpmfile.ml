@@ -1,2 +1,3 @@
-module Rpm_package = Rpm_package
+module Package = Package
 module Reader = Reader
+module View = View
