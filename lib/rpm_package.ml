@@ -22,13 +22,3 @@ and header_entry_value =
   | Binary of bytes
   | StringArray of string list
   | Array of header_entry_value list
-
-let lead_version_of_int = function
-  | 0x0300 -> `V3
-  | 0x0400 -> `V4
-  | _ -> raise (Invalid_argument "lead version")
-
-let lead_kind_of_int = function
-  | 0 -> `Binary
-  | 1 -> `Source
-  | _ -> raise (Invalid_argument "lead kind (binary or source)")

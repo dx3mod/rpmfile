@@ -1,10 +1,20 @@
 module Parsers = struct
   open Angstrom
 
+  let lead_version_of_int = function
+    | 0x0300 -> `V3
+    | 0x0400 -> `V4
+    | _ -> raise (Invalid_argument "lead version")
+
+  let lead_kind_of_int = function
+    | 0 -> `Binary
+    | 1 -> `Source
+    | _ -> raise (Invalid_argument "lead kind (binary or source)")
+
   let lead =
     let* _ = string "\xED\xAB\xEE\xDB" <|> fail "invalid LEAD section" in
-    let* version = BE.any_int16 >>| Rpm_package.lead_version_of_int in
-    let* kind = BE.any_int16 >>| Rpm_package.lead_kind_of_int in
+    let* version = BE.any_int16 >>| lead_version_of_int in
+    let* kind = BE.any_int16 >>| lead_kind_of_int in
     let* arch_num = BE.any_int16 in
     let* name =
       let* name = take_till (fun c -> c = '\x00') in
