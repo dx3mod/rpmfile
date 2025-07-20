@@ -3,8 +3,6 @@
 A library for reading [RPM packages][RPM] (supports version 3.0 and partially 4.0) 
 powered by [Angstrom].
 
-In active development now! Reborn the project.
-
 ## Usage
 
 You can install the package using the OPAM package manager from the repository
@@ -16,7 +14,7 @@ or pin the latest development version from GitHub.
 $ opam pin https://github.com/dx3mod/rpmfile.git
 ```
 
-Now that the package has been installed on your system, we can start writing code using the Rpmfile library. To do this, you need to include the library in your Dune project or another way.
+Now that the package has been installed on your system, we can start writing code using the Rpmfile library. To do this, you need to include the library in your Dune project (a `dune` file) or another way.
 ```dune
 (libraries ... rpmfile)
 ```
@@ -47,9 +45,16 @@ After successful parsing, we got a `Package.t` type record. To extract tags from
 - : int = 1653906083
 ```
 
-## Contribution
+## Hacking
 
-See [HACKING.md](./HACKING.md) if you are interested in developing the project.
+Package format specification:
+- [Package File Format](https://refspecs.linuxbase.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html)
+- [V4 Package format](https://rpm-software-management.github.io/rpm/manual/format_v4.html)
+
+Other references:
+- Alternative my implementation in TypeScript &mdash; [rpm-parser](https://github.com/dx3mod/rpm-parser)
+- [Live coding stream](https://youtu.be/tsI-ZypQ9O0?si=Oghi1yv-2BRkUb7r) (in Russian) demo version of the parser
+- <https://github.com/rpm-rs/rpm/>
 
 [RPM]: https://en.wikipedia.org/wiki/RPM_Package_Manager
 [Angstrom]: https://github.com/inhabitedtype/angstrom
