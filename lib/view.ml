@@ -1,3 +1,5 @@
+(** Functions for getting tag values from package *)
+
 module Internal = struct
   let get_header_tag pkg extract tag =
     List.assoc tag pkg.Package.header |> extract

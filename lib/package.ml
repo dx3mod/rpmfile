@@ -1,3 +1,5 @@
+(** RPM package metadata representation. *)
+
 type t = { lead : lead; signature : header; header : header }
 
 and lead = {
