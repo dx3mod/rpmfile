@@ -2,6 +2,9 @@ module Internal = struct
   let get_header_tag pkg extract tag =
     List.assoc tag pkg.Package.header |> extract
 
+  let get_header_tag_opt pkg extract tag =
+    try get_header_tag pkg extract tag |> Option.some with Not_found -> None
+
   let get_signature_tag pkg extract tag =
     List.assoc tag pkg.Package.signature |> extract
 
