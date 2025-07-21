@@ -2,11 +2,9 @@ module Selector : sig
   module type S = sig
     val select_header_entries : Package.header_tag -> bool
     val select_signature_entries : Package.header_tag -> bool
-    val select_body : bool
   end
 
   module Default : S
-  module Default_with_body : S
 end
 
 module Make : (_ : Selector.S) -> sig

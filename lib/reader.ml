@@ -117,36 +117,23 @@ module Parsers = struct
         count index_record.count value_parser >>| fun x -> Array x
     | _ -> value_parser
 
-  let package ~signature_selector ~header_selector ~select_body =
+  let package ~signature_selector ~header_selector =
     let+ lead = lead
     and+ signature = header ~selector:signature_selector
-    and+ header = header ~selector:header_selector
-    and+ body =
-      let open Angstrom in
-      if select_body then take_bigstring_while (Fun.const true) >>| Option.some
-      else (available >>= advance) *> return None
-    in
+    and+ header = header ~selector:header_selector in
 
-    Package.{ lead; signature; header; body }
+    Package.{ lead; signature; header }
 end
 
 module Selector = struct
   module type S = sig
     val select_header_entries : Package.header_tag -> bool
     val select_signature_entries : Package.header_tag -> bool
-    val select_body : bool
   end
 
   module Default : S = struct
     let select_header_entries = Fun.const true
     let select_signature_entries = Fun.const true
-    let select_body = false
-  end
-
-  module Default_with_body : S = struct
-    include Default
-
-    let select_body = true
   end
 end
 
@@ -154,7 +141,6 @@ module Make (Selec : Selector.S) = struct
   let package_parser =
     Parsers.package ~signature_selector:Selec.select_signature_entries
       ~header_selector:Selec.select_header_entries
-      ~select_body:Selec.select_body
 
   let of_string = Angstrom.(parse_string ~consume:All) package_parser
   let of_bigstring = Angstrom.(parse_bigstring ~consume:All) package_parser

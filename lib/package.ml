@@ -1,9 +1,4 @@
-type t = {
-  lead : lead;
-  signature : header;
-  header : header;
-  body : Bigstringaf.t option;
-}
+type t = { lead : lead; signature : header; header : header }
 
 and lead = {
   version : [ `V3 | `V4 ];
