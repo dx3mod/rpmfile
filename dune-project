@@ -2,7 +2,7 @@
 
 (name rpmfile)
 
-(version 1.0.0)
+(version 0.7.0)
 
 (generate_opam_files true)
 
