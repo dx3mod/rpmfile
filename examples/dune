@@ -1,0 +1,3 @@
+(executables
+ (names basic_read_pkg custom_selector effective_read_unix)
+ (libraries rpmfile angstrom.unix))

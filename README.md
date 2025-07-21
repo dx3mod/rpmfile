@@ -49,25 +49,7 @@ let hello_pkg =
 - : int = 1653906083
 ```
 
-#### Custom selector
-
-```ocaml
-module My_selector : Rpmfile.Reader.Selector.S = struct
-  (* todo *)
-end
-```
-
-#### Custom view-function
-
-```ocaml
-module View = struct
-  include Rpmfile.View
-
-  let epoch pkg = 
-    let open Internal in
-    get_header_tag_opt pkg Extract.int Tags.Header.epoch
-end
-```
+For more details see source code and [examples](./examples/).
 
 
 ## Contribution
