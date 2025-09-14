@@ -1,30 +1,27 @@
-(** Yes, it's RPM packages reader. *)
+(** The module for reading RPM packages from different sources. *)
 
-(** A selector (like predicate function) is used to determine which tags should
-    be parsed and which should not. This greatly increases parsing speed and
-    saves memory. *)
-module Selector : sig
-  module type S = sig
-    val select_header_entries : Package.header_tag -> bool
-    val select_signature_entries : Package.header_tag -> bool
-  end
+type tags_selector = {
+  predicate_signature_tag : int -> bool;
+  predicate_header_tag : int -> bool;
+}
 
-  module Default : S
-end
+val make_package_parser :
+  tags_selector:tags_selector -> capture_payload:bool -> Package.t Angstrom.t
 
-module Make : (_ : Selector.S) -> sig
-  val package_parser : Package.t Angstrom.t
-  val of_string : string -> (Package.t, string) result
-  val of_bigstring : Bigstringaf.t -> (Package.t, string) result
-  val of_channel : in_channel -> (Package.t, string) result
-end
+val of_string :
+  ?tags_selector:tags_selector ->
+  ?capture_payload:bool ->
+  string ->
+  (Package.t, string) result
 
-(** Default reader that read all tags. *)
-module Default : sig
-  val package_parser : Package.t Angstrom.t
-  val of_string : string -> (Package.t, string) result
-  val of_bigstring : Bigstringaf.t -> (Package.t, string) result
-  val of_channel : in_channel -> (Package.t, string) result
-end
+val of_bigstring :
+  ?tags_selector:tags_selector ->
+  ?capture_payload:bool ->
+  Bigstringaf.t ->
+  (Package.t, string) result
 
-val is_package : string -> bool
+val of_channel :
+  ?tags_selector:tags_selector ->
+  ?capture_payload:bool ->
+  in_channel ->
+  (Package.t, string) result
