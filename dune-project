@@ -2,7 +2,7 @@
 
 (name rpmfile)
 
-(version 0.8)
+(version 0.8.0)
 
 (generate_opam_files true)
 
@@ -21,6 +21,7 @@
  (depends
   (ocaml
    (>= 4.14))
-   angstrom
+  (angstrom
+   (>= 0.15))
   dune)
  (tags (rpm)))
