@@ -1,8 +1,8 @@
-(lang dune 3.16)
+(lang dune 3.6)
 
 (name rpmfile)
 
-(version 0.8.0)
+(version 1.0.0)
 
 (generate_opam_files true)
 
@@ -18,10 +18,10 @@
 (package
  (name rpmfile)
  (synopsis "RPM package reader")
+ (description "A library for processing RPM packages, supporting version 3.0 and partly 4.0.")
  (depends
   (ocaml
    (>= 4.14))
-  (angstrom
-   (>= 0.15))
+  bytream
   dune)
  (tags (rpm)))
