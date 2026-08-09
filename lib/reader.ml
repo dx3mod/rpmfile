@@ -96,15 +96,14 @@ let input_index_value_of_record in_stream index_record =
     | 7 -> Package_intf.Binary (In.input_string in_stream index_record.count)
     | 8 | 9 ->
         Package_intf.StringArray
-          (List.init index_record.count @@ fun _ -> input_cstring in_stream)
+          In.(take index_record.count input_cstring in_stream)
     | _ -> raise_error Illegal_index_record_kind
   in
 
   match index_record.kind with
   | 7 | 8 | 9 -> input_value in_stream
   | _ when index_record.count > 1 ->
-      Package_intf.Array
-        (List.init index_record.count @@ fun _ -> input_value in_stream)
+      Package_intf.Array In.(take index_record.count input_value in_stream)
   | _ -> input_value in_stream
 
 let input_header_structure ~padding in_stream =
@@ -129,9 +128,7 @@ let input_header_structure ~padding in_stream =
     In.consume_bytes in_stream @@ ((8 - (section_size mod 8)) mod 8)
   end;
 
-  let structure_size = section_size + (16 * List.length index_records) + 16 in
-
-  (entries, structure_size)
+  entries
 
 (***************************************************************************)
 (*   PACKAGE                                                               *)
@@ -144,15 +141,15 @@ let find_payload_size_tag entries =
 
 let input_package_with ~on_payload in_stream =
   let lead = input_lead in_stream in
-  let signature, _ = input_header_structure ~padding:true in_stream in
-  let header, structure_size =
-    input_header_structure ~padding:false in_stream
+  let signature = input_header_structure ~padding:true in_stream in
+  let header, header_size =
+    In.with_size (input_header_structure ~padding:false) in_stream
   in
 
   let payload_size =
     (* RPMTAG_SIZE = Header + Payload => 
        PAYLOAD =  RPMTAG_SIZE - Header *)
-    find_payload_size_tag signature - structure_size
+    find_payload_size_tag signature - header_size
   in
 
   on_payload in_stream payload_size;
