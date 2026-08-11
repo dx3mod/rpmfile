@@ -3,7 +3,7 @@ module In = Bytream.In
 type error =
   | Invalid_rpm_code
   | Illegal_rpm_version
-  | Illegal_rpm_package_type
+  | Illegal_rpm_package_metadata_type
   | Invalid_header_record_code
   | Illegal_index_record_kind
   | Not_found_payload_size
@@ -16,7 +16,7 @@ let raise_error e = raise @@ Error e
 (*   LEAD SECTION                                                          *)
 (***************************************************************************)
 
-let input_package_code in_stream =
+let input_package_metadata_code in_stream =
   match In.input_string in_stream 4 with
   | "\xED\xAB\xEE\xDB" -> ()
   | _ -> raise_error Invalid_rpm_code
@@ -27,16 +27,16 @@ and input_version in_stream =
   | 0x0400 -> `V4
   | _ -> raise_error Illegal_rpm_version
 
-and input_package_type in_stream =
+and input_package_metadata_type in_stream =
   match In.input_int16_be in_stream with
   | 0 -> `Binary
   | 1 -> `Source
-  | _ -> raise_error Illegal_rpm_package_type
+  | _ -> raise_error Illegal_rpm_package_metadata_type
 
 let input_lead in_stream =
-  input_package_code in_stream;
+  input_package_metadata_code in_stream;
   let version = input_version in_stream in
-  let kind = input_package_type in_stream in
+  let kind = input_package_metadata_type in_stream in
   let arch_num = In.input_int16_be in_stream in
   let name = In.input_while' ~max:65 (( <> ) '\x00') in_stream in
   let os_num = In.input_int16_be in_stream in
@@ -44,7 +44,8 @@ let input_lead in_stream =
 
   In.consume_bytes in_stream 16 (* padding *);
 
-  Package_intf.{ version; kind; arch_num; name; os_num; signature_type }
+  Package_metadata.Lead.
+    { version; kind; arch_num; name; os_num; signature_type }
 
 (***************************************************************************)
 (*   HEADER STRUCTURE                                                      *)
@@ -86,16 +87,18 @@ let input_index_value_of_record in_stream index_record =
 
   let input_value in_stream =
     match index_record.kind with
-    | 0 -> Package_intf.Null
-    | 1 -> Package_intf.Char (In.input_char in_stream)
-    | 2 -> Package_intf.Int (In.input_int8 in_stream)
-    | 3 -> Package_intf.Int (In.input_int16_be in_stream)
-    | 4 -> Package_intf.Int32 (In.input_int32_be in_stream)
-    | 5 -> Package_intf.Int64 (In.input_int64_be in_stream)
-    | 6 -> Package_intf.String (input_cstring in_stream)
-    | 7 -> Package_intf.Binary (In.input_string in_stream index_record.count)
+    | 0 -> Package_metadata.Header_structure.Null
+    | 1 -> Package_metadata.Header_structure.Char (In.input_char in_stream)
+    | 2 -> Package_metadata.Header_structure.Int (In.input_int8 in_stream)
+    | 3 -> Package_metadata.Header_structure.Int (In.input_int16_be in_stream)
+    | 4 -> Package_metadata.Header_structure.Int32 (In.input_int32_be in_stream)
+    | 5 -> Package_metadata.Header_structure.Int64 (In.input_int64_be in_stream)
+    | 6 -> Package_metadata.Header_structure.String (input_cstring in_stream)
+    | 7 ->
+        Package_metadata.Header_structure.Binary
+          (In.input_string in_stream index_record.count)
     | 8 | 9 ->
-        Package_intf.StringArray
+        Package_metadata.Header_structure.StringArray
           In.(take index_record.count input_cstring in_stream)
     | _ -> raise_error Illegal_index_record_kind
   in
@@ -103,7 +106,8 @@ let input_index_value_of_record in_stream index_record =
   match index_record.kind with
   | 7 | 8 | 9 -> input_value in_stream
   | _ when index_record.count > 1 ->
-      Package_intf.Array In.(take index_record.count input_value in_stream)
+      Package_metadata.Header_structure.Array
+        In.(take index_record.count input_value in_stream)
   | _ -> input_value in_stream
 
 let input_header_structure ~padding in_stream =
@@ -131,15 +135,15 @@ let input_header_structure ~padding in_stream =
   entries
 
 (***************************************************************************)
-(*   PACKAGE                                                               *)
+(*   Package_metadata                                                               *)
 (***************************************************************************)
 
 let find_payload_size_tag entries =
   match List.assoc 1000 entries with
-  | Package_intf.Int32 size -> Int32.to_int size
+  | Package_metadata.Header_structure.Int32 size -> Int32.to_int size
   | (exception Not_found) | _ -> raise_error Not_found_payload_size
 
-let input_package_with ~on_payload in_stream =
+let input_package_metadata_with ~on_payload in_stream =
   let lead = input_lead in_stream in
   let signature = input_header_structure ~padding:true in_stream in
   let header, header_size =
@@ -154,20 +158,32 @@ let input_package_with ~on_payload in_stream =
 
   on_payload in_stream payload_size;
 
-  Package_intf.{ lead; signature; header }
+  Package_metadata.{ lead; signature; header }
 
-let input_package_meta_only in_stream =
+let input_package_metadata_only in_stream =
   let on_payload _ _ = () in
-  input_package_with ~on_payload in_stream
+  input_package_metadata_with ~on_payload in_stream
 
 let input_package_without_payload in_stream =
   let on_payload in_stream size = In.consume_bytes in_stream size in
-  input_package_with ~on_payload in_stream
+  input_package_metadata_with ~on_payload in_stream
 
-let input_package_with_payload in_stream =
+let input_package_with_string_payload in_stream =
   let payload = ref "" in
 
   let on_payload in_stream size = payload := In.input_string in_stream size in
-  let package = input_package_with ~on_payload in_stream in
 
-  (package, !payload)
+  let package_metadata = input_package_metadata_with ~on_payload in_stream in
+  (package_metadata, !payload)
+
+let input_package_with_bigstring_payload in_stream =
+  let payload = ref Bstr.empty in
+
+  let on_payload in_stream size =
+    let buffer = Bstr.create size in
+    In.really_input in_stream buffer 0 size;
+    payload := buffer
+  in
+
+  let package_metadata = input_package_metadata_with ~on_payload in_stream in
+  (package_metadata, !payload)
