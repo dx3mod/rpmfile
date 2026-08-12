@@ -7,7 +7,7 @@
     provides {!Metadata.t} and {!Payload.t}, which you can use to compose the
     package in the way you need. *)
 
-module Metadata = Package_metadata
+module Metadata = Metadata
 module Payload = Payload
 
 (** {2 Content viewing} *)
