@@ -16,5 +16,7 @@ module View = View
 
 (** {1 Reader & Writer} *)
 
+(** Powered by [Bytream] library. *)
+
 module Reader = Reader
 module Writer = Writer

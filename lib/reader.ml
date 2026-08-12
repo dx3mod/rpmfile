@@ -145,7 +145,7 @@ let find_payload_size_tag entries =
   | Metadata.Header_structure.Int32 size -> Int32.to_int size
   | (exception Not_found) | _ -> raise_error Not_found_payload_size
 
-let input_metadata_with ~on_payload in_stream =
+let input_metadata_with in_stream f =
   let lead = input_lead in_stream in
   let signature = input_header_structure ~padding:true in_stream in
   let header, header_size =
@@ -158,34 +158,23 @@ let input_metadata_with ~on_payload in_stream =
     find_payload_size_tag signature - header_size
   in
 
-  on_payload in_stream payload_size;
+  let metadata = Metadata.{ lead; signature; header } in
 
-  Metadata.{ lead; signature; header }
+  f metadata payload_size
 
-let input_metadata_only in_stream =
-  let on_payload _ _ = () in
-  input_metadata_with ~on_payload in_stream
+let input_metadata_only in_stream = input_metadata_with in_stream Fun.const
 
 let input_package_without_payload in_stream =
-  let on_payload in_stream size = In.consume_bytes in_stream size in
-  input_metadata_with ~on_payload in_stream
+  input_metadata_with in_stream @@ fun metadata payload_size ->
+  In.consume_bytes in_stream payload_size;
+  metadata
 
-let input_package_with_string_payload in_stream =
-  let payload = ref "" in
+let input_metadata_with_string_payload in_stream =
+  input_metadata_with in_stream @@ fun metadata payload_size ->
+  (metadata, In.input_string in_stream payload_size)
 
-  let on_payload in_stream size = payload := In.input_string in_stream size in
-
-  let metadata = input_metadata_with ~on_payload in_stream in
-  (~metadata, ~payload:!payload)
-
-let input_package_with_bigstring_payload in_stream =
-  let payload = ref Bstr.empty in
-
-  let on_payload in_stream size =
-    let buffer = Bstr.create size in
-    In.really_input in_stream buffer 0 size;
-    payload := buffer
-  in
-
-  let metadata = input_metadata_with ~on_payload in_stream in
-  (~metadata, ~payload:!payload)
+let input_metadata_with_bigstring_payload in_stream =
+  input_metadata_with in_stream @@ fun metadata payload_size ->
+  let buffer = Bstr.create payload_size in
+  In.really_input in_stream buffer 0 payload_size;
+  (metadata, buffer)

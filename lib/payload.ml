@@ -1,4 +1,4 @@
-(** RPM package's payload type. *)
+(** The module for generic work with RPM package's payload. *)
 
 type t =
   [ `String of string

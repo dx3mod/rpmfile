@@ -3,7 +3,15 @@
     OCaml values.
 
     This module allows you to find values by their tags, either by their number
-    or by their name. *)
+    or by their name.
+
+    {b Example}
+
+    {[
+    let open Rpmfile.View in
+    Printf.printf "%s.%s.rpm\n" (name metadata) (release metadata)
+    (* hello.1.3.rpm *)
+    ]} *)
 
 val name : Metadata.t -> string
 val release : Metadata.t -> string
