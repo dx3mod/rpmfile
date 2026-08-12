@@ -10,7 +10,7 @@ module Lead = struct
 end
 
 module Header_structure = struct
-  type t = (int * value) list
+  type t = (int, value) Hashtbl.t
 
   and value =
     | Null

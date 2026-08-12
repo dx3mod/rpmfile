@@ -115,16 +115,19 @@ let input_header_structure ~padding in_stream =
 
   let section_offset = In.position in_stream in
 
+  let entries = Hashtbl.create List.(length index_records) in
+
   let input_entry index_record =
     let absolute_offset = In.position in_stream in
     let relative_offset = absolute_offset - section_offset in
 
     In.consume_bytes in_stream (index_record.offset - relative_offset);
 
-    (index_record.tag, input_index_value_of_record in_stream index_record)
+    Hashtbl.add entries index_record.tag
+      (input_index_value_of_record in_stream index_record)
   in
 
-  let entries = List.map input_entry index_records in
+  List.iter input_entry index_records;
 
   (* It's necessary for between Signature header structure and Header header structure. *)
   if padding then begin
@@ -138,7 +141,7 @@ let input_header_structure ~padding in_stream =
 (***************************************************************************)
 
 let find_payload_size_tag entries =
-  match List.assoc 1000 entries with
+  match Hashtbl.find entries 1000 with
   | Metadata.Header_structure.Int32 size -> Int32.to_int size
   | (exception Not_found) | _ -> raise_error Not_found_payload_size
 
