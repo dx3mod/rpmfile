@@ -10,7 +10,16 @@ type error =
 
 exception Error of error
 
+(***************************************************************************)
+(*   COMMON                                                                *)
+(***************************************************************************)
+
 let raise_error e = raise @@ Error e
+
+let input_null_term_string in_stream =
+  let string = In.input_while (( <> ) '\x00') in_stream in
+  In.consume_bytes in_stream 1 (* \x00 *);
+  string
 
 (***************************************************************************)
 (*   LEAD SECTION                                                          *)
@@ -38,7 +47,7 @@ let input_lead in_stream =
   let version = input_version in_stream in
   let kind = input_metadata_type in_stream in
   let arch_num = In.input_int16_be in_stream in
-  let name = In.input_while' ~max:65 (( <> ) '\x00') in_stream in
+  let name = In.input_while' ~max_len:66 (( <> ) '\x00') in_stream in
   let os_num = In.input_int16_be in_stream in
   let signature_type = In.input_int16_be in_stream in
 
@@ -82,8 +91,6 @@ let input_index_records in_stream nindex =
   |> List.sort (fun ir ir' -> compare ir.offset ir'.offset)
 
 let input_index_value_of_record in_stream index_record =
-  let input_cstring in_stream = In.input_while (( <> ) '\x00') in_stream in
-
   let input_value in_stream =
     match index_record.kind with
     | 0 -> Metadata.Header_structure.Null
@@ -92,13 +99,13 @@ let input_index_value_of_record in_stream index_record =
     | 3 -> Metadata.Header_structure.Int (In.input_int16_be in_stream)
     | 4 -> Metadata.Header_structure.Int32 (In.input_int32_be in_stream)
     | 5 -> Metadata.Header_structure.Int64 (In.input_int64_be in_stream)
-    | 6 -> Metadata.Header_structure.String (input_cstring in_stream)
+    | 6 -> Metadata.Header_structure.String (input_null_term_string in_stream)
     | 7 ->
         Metadata.Header_structure.Binary
           (In.input_string in_stream index_record.count)
     | 8 | 9 ->
         Metadata.Header_structure.StringArray
-          In.(take index_record.count input_cstring in_stream)
+          In.(take index_record.count input_null_term_string in_stream)
     | _ -> raise_error Illegal_index_record_kind
   in
 
