@@ -1,6 +1,22 @@
-(** A library for reading RPM packages (supports version 3.0 and partially 4.0)
-    powered by Angstrom. *)
+(** A pure OCaml library for processing (reading and writing) RPM packages,
+    supporting versions 3.0 and partly version 4.0. *)
 
-module Package = Package
-module Reader = Reader
+(** {1 Package} *)
+
+(** The [Rpmfile] does not provide a single "package type", but instead it
+    provides {!Metadata.t} and {!Payload.t}, which you can use to compose the
+    package in the way you need. *)
+
+module Metadata = Metadata
+module Payload = Payload
+
+(** {2 Content viewing} *)
+
 module View = View
+
+(** {1 Reader & Writer} *)
+
+(** Powered by [Bytream] library. *)
+
+module Reader = Reader
+module Writer = Writer

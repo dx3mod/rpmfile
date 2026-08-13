@@ -1,51 +1,61 @@
+<img src="https://i.ibb.co/LXxS8DP1/rpmfile-logo-001.png" alt="text" width="150">
+
 # Rpmfile
 
-A library for reading [RPM packages][RPM] (supports version 3.0 and partially 4.0) powered by [Angstrom].
+A pure OCaml library for parsing RPM files.
 
-## Installation
+## Quick start
 
-Installation by OPAM package manager 
+You can install the `rpmfile` library using the [OPAM] package manager or any other method you prefer.
+
 ```console
-$ opam install rpmfile
+$ opam install rpmfile.1.0.0
 ```
-or pin the latest development version from GitHub.
+
+You can also get the latest version of the upstream (developer) branch.
 ```console
-$ opam pin https://github.com/dx3mod/rpmfile.git
+$ opam pin rpmfile.dev https://github.com/dx3mod/rpmfile.git
 ```
 
-## Usage
+If you are using [Dune], please add the `rpmfile` library to your dependencies.
 
-> [!NOTE]  
-> **Theoretical minimum**
-> 
-> Each [RPM package](https://en.wikipedia.org/wiki/RPM_Package_Manager) consists of four sections: lead, signature, header, and payload. The first three are meta information about the package. It contains a description, a dependency list, and so on.
-> 
-> The information in the signature and header is stored on a key-value basis, where the key is called a tag. The value can be a number, a string or an array.
-> 
-> Often you don't need [all information](https://rpm-software-management.github.io/rpm/manual/tags.html) about a package, but only some tags. For this task, a selector (like predicate function) is used to determine which tags should be parsed and which should not. This greatly increases parsing speed and saves memory.
 
+### Theoretical minimum about RPM files
+
+Each [RPM package](https://en.wikipedia.org/wiki/RPM_Package_Manager) consists of four sections: `Lead`, `Signature`, `Header`, and `Payload`. The first three are meta information about the package. It contains a description, a dependency list, and so on.
+ 
+The information in the `Signature` and `Header` sections is stored on a key-value basis, where the key is called a tag. The value can be a number, a string or an array. The `Payload` section usually contains a compressed [Cpio] archive that already contains the package's files.
+
+For more information, please see [the materials](./CONTRIBUTING.md).
+
+
+
+### In use
+
+Below is an example of simply reading an RPM file and obtaining the package name and version.
 ```ocaml
-# #require "rpmfile";;
+let () = 
+  let metadata = 
+    In_channel.with_open_bin 
+      "hello.rpm" 
+      Rpmfile.Reader.from_channel_without_payload 
+  in
+
+  let name, release = Rpmfile.View.(name metadata, release metadata) in 
+  Printf.printf "%s.%s\n" name release
+  (* hello.1.3 *)
 ```
 
-```ocaml
-let pkg =
-  In_channel.with_open_bin Sys.argv.(1) Rpmfile.Reader.of_channel
-  |> Result.get_ok
-```
+See more examples in the [`examples`](./examples/) directory.
 
-```ocaml
-# Rpmfile.View.name pkg;;
-- : string = "hello"
-```
 
-For more details see source code and [examples](./examples/).
+## License
 
-> [!WARNING] 
-> **Limitations**
-> 
-> The implementation uses OCaml int (31/63 bit depending on your machine) for some internal service values (e.g. as an offset), which may have limitations.
-> Also, decoding values with field access functions converts any int to OCaml int, which may break on 32-bit systems.
+The project is licensed under [the MIT License](./LICENSE), which allows for all permissions.
+Just use it and enjoy yourself without fear. We are always open to pull requests!
+
 
 [RPM]: https://en.wikipedia.org/wiki/RPM_Package_Manager
-[Angstrom]: https://github.com/inhabitedtype/angstrom
+[OPAM]: https://opam.ocaml.org/
+[Dune]: https://dune.build
+[Cpio]: https://en.wikipedia.org/wiki/Cpio
