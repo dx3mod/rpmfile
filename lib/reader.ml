@@ -3,7 +3,7 @@ module In = Bytream.In
 type error =
   | Invalid_rpm_code
   | Illegal_rpm_version
-  | Illegal_rpm_Metadata_type
+  | Illegal_rpm_metadata_type
   | Invalid_header_record_code
   | Illegal_index_record_kind
   | Not_found_payload_size
@@ -40,7 +40,7 @@ and input_metadata_type in_stream =
   match In.input_int16_be in_stream with
   | 0 -> `Binary
   | 1 -> `Source
-  | _ -> raise_error Illegal_rpm_Metadata_type
+  | _ -> raise_error Illegal_rpm_metadata_type
 
 let input_lead in_stream =
   input_metadata_code in_stream;
@@ -144,7 +144,7 @@ let input_header_structure ~padding in_stream =
   entries
 
 (***************************************************************************)
-(*   Metadata                                                               *)
+(*   Metadata                                                              *)
 (***************************************************************************)
 
 let find_payload_size_tag entries =
@@ -185,3 +185,16 @@ let input_metadata_with_bigstring_payload in_stream =
   let buffer = Bstr.create payload_size in
   In.really_input in_stream buffer 0 payload_size;
   (metadata, buffer)
+
+(***************************************************************************)
+(*   Reader utils                                                               *)
+(***************************************************************************)
+
+let from_channel_without_payload ic =
+  let in_stream = Bytream.In.of_channel ic in
+  input_package_without_payload in_stream
+
+and from_channel_with_payload ic =
+  let in_stream = Bytream.In.of_channel ic in
+  input_metadata_with_bigstring_payload in_stream
+  |> Pair.map_snd (fun payload_bigstring -> `Bigstring payload_bigstring)

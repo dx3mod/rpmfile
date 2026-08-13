@@ -1,9 +1,6 @@
-(** The module for viewing the contents of the RPM package's metadata
-    ({!Metadata.t} type) and decoding {!Metadata.Header_structure.value}s into
-    OCaml values.
-
-    This module allows you to find values by their tags, either by their number
-    or by their name.
+(** The module for viewing the contents of RPM package metadata ({!Metadata.t})
+    and decoding {!Metadata.Header_structure} values into OCaml values allows
+    you to find values by their tags, either by their number or by name.
 
     {b Example}
 
@@ -13,11 +10,24 @@
     (* hello.1.3.rpm *)
     ]} *)
 
+(** {1 Getting values functions} *)
+
 val name : Metadata.t -> string
+(** [name metadata] returns RPM package's name. *)
+
 val release : Metadata.t -> string
+(** [release metadata] returns RPM package's release. *)
+
 val epoch : Metadata.t -> string
+(** [epoch metadata] returns RPM package's epoch. *)
+
 val summery : Metadata.t -> string list
+(** [summery metadata] returns RPM package's summery. *)
+
 val description : Metadata.t -> string list
+(** [description metadata] returns RPM package's description. *)
+
+(** {3 Finding} *)
 
 val find_exn :
   ?name:string ->
@@ -26,6 +36,17 @@ val find_exn :
   Metadata.Header_structure.t ->
   'a
 (** [find_exn ?name ~tag ~decode header_structure]
+
+    Find the value of the [tag] in the [header_structure] and return the
+    [decode]d value. See also {!Tags_table} module for tag numbers and the
+    {!Decode} module for extract OCaml values from
+    {!Metadata.Header_structure.value} representation.
+
+    {b Example}
+
+    {[
+    Rpmfile.View.(find_exn ~tag:1000 ~decode:string) metadata (* hello *)
+    ]}
 
     @param ?name
       Useful for understandable exception messages

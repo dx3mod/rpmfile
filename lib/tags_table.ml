@@ -1,3 +1,5 @@
+(** The module contains tag numbers for [Signature] and [Header] sections. *)
+
 let name = 1000
 let version = 1001
 let release = 1002

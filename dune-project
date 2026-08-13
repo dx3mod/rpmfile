@@ -17,11 +17,13 @@
 
 (package
  (name rpmfile)
- (synopsis "RPM package reader")
- (description "A library for processing RPM packages, supporting version 3.0 and partly 4.0.")
+ (synopsis "A pure OCaml library for parsing RPM files")
+ (description
+  "A library for processing (reading and writing) RPM files, supporting version 3.0 and partly 4.0.")
  (depends
   (ocaml
    (>= 4.14))
   bytream
   dune)
- (tags (rpm)))
+ (tags
+  (rpm rpmfile)))
