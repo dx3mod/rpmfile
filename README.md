@@ -1,3 +1,5 @@
+<img src="https://i.ibb.co/LXxS8DP1/rpmfile-logo-001.png" alt="text" width="150">
+
 # Rpmfile
 
 A pure OCaml library for parsing RPM files.
@@ -43,6 +45,8 @@ let () =
   Printf.printf "%s.%s\n" name release
   (* hello.1.3 *)
 ```
+
+See more examples in the [`examples`](./examples/) directory.
 
 
 ## License
