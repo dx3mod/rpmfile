@@ -14,3 +14,7 @@ Other references:
 - [Live coding stream](https://youtu.be/tsI-ZypQ9O0?si=Oghi1yv-2BRkUb7r) (in Russian) demo version of the parser
 - <https://github.com/rpm-rs/rpm/>
 
+## Tasks list
+
+- [ ] Signature verification
+- [ ] Payload extracting and process archive
