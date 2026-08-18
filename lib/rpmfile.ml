@@ -1,5 +1,5 @@
-(** A pure OCaml library for processing (reading and writing) RPM packages,
-    supporting versions 3.0 and partly version 4.0. *)
+(** A pure OCaml library for parsing RPM files (supports V3 and partly V4
+    package versions). *)
 
 (** {1 Package} *)
 
@@ -14,9 +14,8 @@ module Payload = Payload
 
 module View = View
 
-(** {1 Reader & Writer} *)
+(** {1 Reader} *)
 
 (** Powered by [Bytream] library. *)
 
 module Reader = Reader
-module Writer = Writer

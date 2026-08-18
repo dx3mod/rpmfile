@@ -2,7 +2,9 @@
 
 # Rpmfile
 
-A pure OCaml library for parsing RPM files.
+A pure OCaml library for parsing RPM files (supports V3 and partly V4 package versions).
+
+[**API references**](https://ocaml.org/packages/rpmfile/latest/docs)
 
 ## Quick start
 
@@ -28,8 +30,6 @@ The information in the `Signature` and `Header` sections is stored on a key-valu
 
 For more information, please see [the materials](./CONTRIBUTING.md).
 
-
-
 ### In use
 
 Below is an example of simply reading an RPM file and obtaining the package name and version.
@@ -46,8 +46,17 @@ let () =
   (* hello.1.3 *)
 ```
 
-See more examples in the [`examples`](./examples/) directory.
+For more details, see [API references](https://ocaml.org/p/rpmfile/latest/doc/index.html) and [`examples/`](./examples/) directory.
 
+## References
+
+Package format specification:
+- [Package File Format](https://refspecs.linuxbase.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html)
+- [V4 Package format](https://rpm-software-management.github.io/rpm/manual/format_v4.html)
+- [RPM Tags](https://rpm-software-management.github.io/rpm/manual/tags.html)
+
+Reference implementations in other languages:
+- <https://github.com/rpm-rs/rpm/> written in Rust
 
 ## License
 

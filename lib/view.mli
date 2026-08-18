@@ -27,6 +27,12 @@ val summery : Metadata.t -> string list
 val description : Metadata.t -> string list
 (** [description metadata] returns RPM package's description. *)
 
+val sizes : Metadata.t -> int list
+(** [sizes metadata] returns RPM package's file sizes. *)
+
+val compressor : Metadata.t -> string
+(** [sizes metadata] returns RPM package's compression used for payload. *)
+
 (** {3 Finding} *)
 
 val find_exn :
@@ -66,18 +72,16 @@ val find_exn :
 
 module Tags_table = Tags_table
 
-module Decoders : sig
-  val null : Metadata.Header_structure.value -> 'a option option
-  val char : Metadata.Header_structure.value -> char option
-  val int : Metadata.Header_structure.value -> int option
-  val int32 : Metadata.Header_structure.value -> int32 option
-  val int64 : Metadata.Header_structure.value -> int64 option
-  val string : Metadata.Header_structure.value -> string option
-  val binary : Metadata.Header_structure.value -> string option
-  val string_array : Metadata.Header_structure.value -> string list option
+module Decoder : sig
+  type 'a t = Metadata.Header_structure.value -> 'a option
 
-  val array :
-    (Metadata.Header_structure.value -> 'a) ->
-    Metadata.Header_structure.value ->
-    'a list option
+  val null : [> `Null ] t
+  val char : char t
+  val int : int t
+  val int32 : int32 t
+  val int64 : int64 t
+  val string : string t
+  val binary : string t
+  val string_array : string list t
+  val array : 'a t -> 'a list t
 end
