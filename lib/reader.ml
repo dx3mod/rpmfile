@@ -196,5 +196,5 @@ let from_channel_without_payload ic =
 
 and from_channel_with_payload ic =
   let in_stream = Bytream.In.of_channel ic in
-  input_metadata_with_bigstring_payload in_stream
-  |> Pair.map_snd (fun payload_bigstring -> `Bigstring payload_bigstring)
+  input_metadata_with in_stream @@ fun metadata payload_size ->
+  (metadata, Payload.of_incoming_bytes payload_size in_stream)
