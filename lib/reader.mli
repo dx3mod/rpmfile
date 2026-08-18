@@ -16,7 +16,8 @@ val from_channel_without_payload : in_channel -> Metadata.t
 val from_channel_with_payload : in_channel -> Metadata.t * Payload.t
 (** [from_channel_with_payload ic]
 
-    Similar to {!input_metadata_with_bigstring_payload}, but for channels. *)
+    Similar to {!from_channel_without_payload}, but returns payload with
+    metadata. *)
 
 (** {2 From incoming byte streams} *)
 
