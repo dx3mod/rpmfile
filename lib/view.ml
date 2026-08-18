@@ -63,3 +63,6 @@ and description m =
 
 and sizes m =
   find_exn ~name:"sizes" ~tag:1028 ~decode:(array int) m.Metadata.header
+
+and compressor m =
+  find_exn ~name:"compressor" ~tag:1125 ~decode:string m.Metadata.header

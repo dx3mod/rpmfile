@@ -30,6 +30,9 @@ val description : Metadata.t -> string list
 val sizes : Metadata.t -> int list
 (** [sizes metadata] returns RPM package's file sizes. *)
 
+val compressor : Metadata.t -> string
+(** [sizes metadata] returns RPM package's compression used for payload. *)
+
 (** {3 Finding} *)
 
 val find_exn :
