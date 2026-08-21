@@ -23,7 +23,8 @@
  (depends
   (ocaml
    (>= 4.14))
-  bytream
+  (bytream
+   (>= 0.2))
   dune)
  (tags
   (rpm rpmfile)))

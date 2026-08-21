@@ -12,7 +12,7 @@ homepage: "https://github.com/dx3mod/rpmfile"
 bug-reports: "https://github.com/dx3mod/rpmfile/issues"
 depends: [
   "ocaml" {>= "4.14"}
-  "bytream"
+  "bytream" {>= "0.2"}
   "dune" {>= "3.6"}
   "odoc" {with-doc}
 ]
